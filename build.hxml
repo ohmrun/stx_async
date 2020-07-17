@@ -1,0 +1,11 @@
+-lib tink_core
+-lib stx_pico
+-lib stx_fn
+-lib stx_log
+-lib hx3compat
+-lib stx_nano
+-cp src/main/haxe
+-D analyzer-optimize
+-D no-deprecation-warnings
+-main Main
+--interp

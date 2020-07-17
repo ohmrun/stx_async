@@ -1,0 +1,22 @@
+{
+    "name": "stx_async",
+    "license": "MIT",
+    "tags": [
+        "cross",
+        "functional"
+    ],
+    "description": "Async base",
+    "contributors": [
+        "0b1kn00b"
+    ],
+    "releasenote": "steady as she goes",
+    "version": "0.0.1",
+    "url": "https://github.com/ohmrun/stx_nano",
+    "dependencies": {
+        "tink_core" : "",
+        "stx_pico"  : "",
+        "stx_nano"  : "",
+        "stx_fn"    : ""
+    },
+    "classPath": "src/main/haxe"
+}
