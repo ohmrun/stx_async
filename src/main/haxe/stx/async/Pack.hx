@@ -8,7 +8,7 @@ using stx.Fn;
 using stx.Nano;
 using stx.Pico;
 using stx.Log;
-import stx.core.pack.Either;
+import stx.pico.Either;
 
 
 enum TaskControl{
@@ -40,7 +40,7 @@ class TaskBase<T,E> implements TaskApi<T,E>{
           return slot.map(
             (e:Either<Task<T,E>,Outcome<T,E>>) -> e.fold(
               next  -> Either.left(next.toWork().asTask()),
-              _     -> stx.core.pack.Either.right(Outcome.success(Noise))
+              _     -> stx.pico.Either.right(Outcome.success(Noise))
             )
           );
         }
@@ -81,7 +81,7 @@ class TaskHandler<T,E> implements TaskApi<T,E> extends TaskBase<T,E>{
         lhs -> Either.left(new TaskHandler(lhs,handler).asTask()),
         rhs -> {
           handler(rhs);
-          return stx.core.pack.Either.right(rhs);
+          return stx.pico.Either.right(rhs);
         }
       )
     );
@@ -252,7 +252,7 @@ class WorkSeq implements WorkApi extends WorkBase{
             rhs.apply(Pursue).map(
               e -> e.fold(
                 _ -> Either.left(this.asTask()),
-                _ -> stx.core.pack.Either.right(Outcome.success(Noise))
+                _ -> stx.pico.Either.right(Outcome.success(Noise))
               )
             );
         }
