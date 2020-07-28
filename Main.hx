@@ -1,4 +1,4 @@
-import stx.async.Pack;
+using stx.Async;
 
 class Main {
 	static function main() {

@@ -2,7 +2,7 @@ package stx.async;
 
 using tink.CoreApi;
 using stx.Nano;
-using stx.async.Pack;
+using stx.Async;
 
 import haxe.unit.*;
 
