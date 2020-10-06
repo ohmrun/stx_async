@@ -1,3 +1,13 @@
+# [](/compare/v1.0.1...v) (2020-10-06)
+
+### Features
+
+* First proper asyncronous scheduler 51ecbf4
+
+# [](/compare/v1.0.0...v) (2020-10-06)
+
+
+
 # [](/compare/v1.0.0...v) (2020-10-06)
 
 
