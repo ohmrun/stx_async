@@ -8,12 +8,27 @@ using stx.Fn;
 using stx.Nano;
 using stx.Pico;
 using stx.Log;
+using stx.Async;
+
 import stx.pico.Either;
 
-
+class Async{
+  static public function log(wildcard:Wildcard):Log{
+    return new stx.Log().tag("stx.async");
+  }
+}
+@:using(stx.Async.TaskControlLift)
 enum TaskControl{
   Pursue;
   Escape;
+}
+class TaskControlLift{
+  static public function fold<Z>(self:TaskControl,pursue:Void->Z,escape:Void->Z):Z{
+    return switch(self){
+      case Pursue: pursue();
+      case Escape: escape();
+    }
+  }
 }
 interface TaskApi<T,E>{
   public function apply(control:TaskControl) : Slot<Either<Task<T,E>,Outcome<T,E>>>;
@@ -133,14 +148,59 @@ class SlotTask<T,E> extends TaskBase<T,E>{
 class Loop{
   static public var instance = new Loop();
 
-  public function new(){}
+  public function new(){
+    this.suspended  = 0;
+    this.threads    = [];
+  }
+  var event     : MainEvent;
+  var suspended : Int;
+  var threads   : Array<Work>;
+
   public function add(work:Work){
-    var event = null;
-        event = MainLoop.add(
-                  function rec(){
-                    work.crunch();
-                  }
-                );
+    threads.push(work);
+    if(event == null){
+      event = MainLoop.add(rec);
+    }
+  }
+  function rec(){
+    __.log()("Loop.rec");
+    var next = __.option(threads.shift());
+    __.log()('has next? $next');
+    if(next.is_defined()){
+      for(work in next){
+        var selection = work.apply(Pursue);
+        __.log()('$selection');
+        var ready     = selection.ready;
+        if(!ready){
+          suspended = suspended + 1;
+        }
+        selection.handle(
+          (x) -> {
+            if(!ready){
+              suspended = suspended - 1;
+            }
+            __.log()('handle: $x');
+            x.fold(
+              function (work:Task<Noise,Noise>):Void{
+                __.log()('push: $work');
+                threads.push(Work.lift(work));
+              },
+              oc -> oc.fold(
+                (_) -> {},
+                on_error
+              )
+            );
+          }
+        );
+      }
+    }else if(suspended > 0){
+
+    }else{
+      event.stop();
+    }
+  }
+  dynamic function on_error(e:Noise):Void{
+    __.crack(e);
   }
 }
 class Stat{
@@ -160,6 +220,9 @@ class FutureWork implements WorkApi extends TaskBase<Noise,Noise>{
     return Slot.Guard(future).flat_map(
       work -> work.apply(control)
     );
+  }
+  public function step(){
+    return apply(Pursue);
   }
 }
 @:forward abstract Work(WorkApi) from WorkApi to WorkApi{
@@ -222,7 +285,9 @@ class FutureWork implements WorkApi extends TaskBase<Noise,Noise>{
   }
 }
 class WorkBase implements WorkApi extends TaskBase<Noise,Noise>{
-  
+  public function step(){
+    return this.apply(Pursue);
+  }
 }
 class WorkSeq implements WorkApi extends WorkBase{
   var lhs     : Work;
@@ -339,8 +404,5 @@ abstract Receiver<R,E>(TaskApi<R,E>) from TaskApi<R,E>{
   }
   public inline function serve():Work{
     return this.toWork();
-  }
-  public inline function later(handler:Outcome<R,E>->Void):Receiver<R,E>{
-    return this;
   }
 }

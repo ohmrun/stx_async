@@ -9,14 +9,14 @@
     "contributors": [
         "0b1kn00b"
     ],
-    "releasenote": "steady as she goes",
-    "version": "0.0.1",
+"releasenote": "see CHANGELOG.md",
+    "version": "1.0.2",
     "url": "https://github.com/ohmrun/stx_nano",
     "dependencies": {
-        "tink_core" : "",
-        "stx_pico"  : "",
-        "stx_nano"  : "",
-        "stx_fn"    : ""
+        "tink_core" : "2.0.0-rc.1",
+        "stx_pico"  : "1.0.0",
+        "stx_nano"  : "0.1.5",
+        "stx_fn"    : "1.0.0"
     },
     "classPath": "src/main/haxe"
 }
