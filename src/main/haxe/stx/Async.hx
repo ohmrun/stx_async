@@ -1,5 +1,6 @@
 package stx;
 
+import haxe.Timer;
 import haxe.MainLoop;
 
 import tink.CoreApi;
@@ -12,9 +13,29 @@ using stx.Async;
 
 import stx.pico.Either;
 
+enum abstract AsyncState(UInt){
+
+}
+/*
+interface BareMinimum<I,O>{
+  public var goods(default,null):Null<O>;
+  public var ready(default,null):Bool;
+  public var state(default,null):ASyncState;
+
+
+  public function assign(v:I):Void;
+  public function attend(fn:O->Void):Void;
+  public function pursue():Void;  
+}
+class AnonSyncBareMinimum<I,O,S> implements BareMinimum<I,O,S>{
+
+}*/
 class Async{
   static public function log(wildcard:Wildcard):Log{
     return new stx.Log().tag("stx.async");
+  }
+  static public function timer(wildcard:Wildcard){
+    return new Timer();
   }
 }
 @:using(stx.Async.TaskControlLift)
@@ -194,7 +215,8 @@ class Loop{
         );
       }
     }else if(suspended > 0){
-
+      //Let it run
+      //TODO backoff algorhithm
     }else{
       event.stop();
     }
@@ -404,5 +426,41 @@ abstract Receiver<R,E>(TaskApi<R,E>) from TaskApi<R,E>{
   }
   public inline function serve():Work{
     return this.toWork();
+  }
+}
+
+typedef TimerDef = {
+  var created(default,null) : Float;
+}
+@:forward abstract Timer(TimerDef) from TimerDef to TimerDef{
+  public function new(?self){
+    if(self == null){
+      this = unit();
+    }else{
+      this = self;
+    }
+  }
+  static public function pure(v:Float):Timer{
+    return {
+      created : v
+    };
+  }
+  static public function unit():Timer{
+    return pure(mark());
+  }
+  static public function mark():Float{
+    return haxe.Timer.stamp();
+  }
+  function copy(?created:Float){
+    return pure(created == null ? this.created : created);
+  }
+  public function start():Timer{
+    return copy(mark());
+  }
+  public function since():Float{
+    return mark() - this.created;
+  }
+  function prj(){
+    return this;
   }
 }
