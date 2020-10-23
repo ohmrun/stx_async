@@ -4,17 +4,16 @@ import stx.async.task.term.*;
 
 interface TaskApi<R,E> extends GoalApi<E>{
   public var result(default,null):Null<R>;
-  public var signal(default,null):Null<tink.core.Signal<Noise>>;
+  @:isVar public var signal(get,null):tink.core.Signal<Noise>;
+  private function get_signal():Signal<Noise>;
 
   public function toWork():Work;
   public function toTaskApi():TaskApi<R,E>;
+
 }
 class TaskCls<T,E> implements TaskApi<T,E> extends Clazz{
   public function pursue():Void {}
   public function escape():Void {}
-
-  @:isVar public var loaded(get,null):Bool;
-  private function get_loaded():Bool return loaded;
   
   @:isVar public var defect(get,null):Null<E>;
   private function get_defect():Null<E> return defect;
@@ -23,13 +22,17 @@ class TaskCls<T,E> implements TaskApi<T,E> extends Clazz{
   private function get_status():GoalStatus return status;
 
   public var result(default,null):Null<T>;
-  public var signal(default,null):Null<tink.core.Signal<Noise>>;
-
+  @:isVar public var signal(get,null):Null<tink.core.Signal<Noise>>;
+  private function get_signal(){
+    if(this.signal == null){
+      init_signal();
+    }
+    return this.signal;
+  }
          var trigger:tink.core.Signal.SignalTrigger<Noise>;
 
   public function new(){
     super();
-    this.loaded = false;
     this.status = Pending;
   }
 
@@ -44,6 +47,11 @@ class TaskCls<T,E> implements TaskApi<T,E> extends Clazz{
   }
   public function toWork():Work{
     return Work.lift(this.toTaskApi());
+  }
+  
+  public var loaded(get,null):Bool;
+  private inline function get_loaded(){
+    return this.status == Secured;
   }
 }
 @:using(stx.async.Task.TaskLift)
@@ -60,8 +68,11 @@ class TaskCls<T,E> implements TaskApi<T,E> extends Clazz{
   @:noUsing static public function FutureOutcome<T,E>(self:Future<Outcome<T,E>>):Task<T,E>{
     return new FutureOutcome(self);
   }
-  @:noUsing static public function Later<T,E>(self:Future<T>):Task<T,E>{
+  @:noUsing static public function Later<T,E>(self:Future<Task<T,E>>):Task<T,E>{
     return lift(new Later(self));
+  }
+  @:noUsing static public function Thunk<T,E>(self:Void->T):Task<T,E>{
+    return lift(new stx.async.task.term.Thunk(self));
   }
   @:noUsing static public function Pure<T,E>(t:T):Task<T,E> return new Pure(t);
   @:noUsing static public function Fail<T,E>(e:E):Task<T,E> return new Fail(e);

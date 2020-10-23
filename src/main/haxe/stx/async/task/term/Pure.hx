@@ -5,5 +5,6 @@ class Pure<T,E> extends TaskCls<T,E>{
     super();
     this.loaded = true;
     this.result = result;
+    this.status = Secured;
   }
 }

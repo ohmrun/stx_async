@@ -21,43 +21,7 @@ typedef WorkApi = Task<Any,Any>;
     __.log().debug('submit: $loop');
     __.option(loop).defv(Loop.ZERO).add(this);
   }
-  public function crunch(?loop){
-    loop          = __.option(loop).defv(Loop.ZERO);
-    var self      = this;
-    var cont      = true;
-    var suspended = false;
-    var backoff   = 0.2;
-
-    while(true == cont){
-      __.log().debug('crunch: suspended? $suspended');
-      if(!suspended){
-        self.pursue();
-        if(self.loaded){
-          cont = false;
-        }else{
-          switch(self.status){
-            case Waiting : 
-              suspended = true;
-              self.signal.nextTime().handle(
-                _ -> {
-                  backoff   = 1.22;
-                  suspended = false;
-                }
-              );
-            case Problem :
-              loop.crack(self.defect);
-            case Pending | Working : 
-            case Secured | Applied : cont = false;
-          }
-        }
-      }else{
-        #if sys
-          Sys.sleep(backoff);
-          backoff = backoff * 1.22;
-        #end
-      }
-    }
-  }
+  public function crunch(?loop) stx.async.work.Crunch.apply(this,loop);
 }
 class WorkLift{
   static public function seq(self:Work,that:Work):Work{

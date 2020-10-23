@@ -40,6 +40,7 @@ class Seq<T,Ti,E> extends TaskCls<Couple<T,Ti>,E>{
           }
         case true : 
           snd.pursue();
+          __.log().debug('seq snd $snd ${snd.status}');
           switch(snd.status){
             case Pending : 
             case Secured :
@@ -52,7 +53,10 @@ class Seq<T,Ti,E> extends TaskCls<Couple<T,Ti>,E>{
                 __.assert().exists(this.snd.signal);
                 this.status = Waiting;
                 this.snd.signal.nextTime().handle(
-                  (_) -> this.trigger.trigger(Noise)
+                  (_) -> {
+                    __.log().debug('$snd arrived');
+                    this.trigger.trigger(Noise);
+                  }
                 );
               }else{
                 __.assert().exists(this.fst.result);
@@ -70,5 +74,8 @@ class Seq<T,Ti,E> extends TaskCls<Couple<T,Ti>,E>{
           }
       } 
     }
+  }
+  public function toString(){
+    return '$sel of $fst -> $snd';
   }
 }
