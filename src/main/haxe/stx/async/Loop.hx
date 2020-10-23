@@ -91,7 +91,7 @@ class LoopCls implements LoopApi{
 }
 
 @:forward abstract Loop(LoopApi) from LoopApi to LoopApi{
-  static public var ZERO(default,null):Loop = new LoopCls();
+  static public var ZERO(default,null):Loop = #if sys Loop.Thread() #else Loop.Event() #end;
   #if sys
   static public function Thread(){
     return new stx.async.loop.term.Thread();

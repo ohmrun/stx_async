@@ -36,7 +36,7 @@ class LaterTest extends utest.Test{
 }
 class SubmitTest extends utest.Test{
   public function test(async:utest.Async){
-    var loop = Loop.Thread();
+    var loop    = Loop.Thread();
     var trigger = Future.trigger();
     var next = Task.Later(trigger.asFuture());
     var task = Task.Pure("hello");

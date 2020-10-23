@@ -9,7 +9,7 @@ class Later<T,E> extends TaskCls<T,E>{
     this.delegate = delegate;
     this.started  = false;
   }
-  override public function pursue(){
+  override public inline function pursue(){
     __.log().close().debug('pursue: loaded: $loaded defect $defect');
     if(!this.loaded && defect==null){
       __.log().close().debug('pursue');
