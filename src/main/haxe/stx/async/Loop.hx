@@ -12,20 +12,38 @@ interface LoopApi{
   public function add(work:Work):Void;
   public function crack(error:Dynamic):Void;
 
-  public function ignition():Void;
+  public function initialize():Void;
+
+  private function ignition(v:HookTag):Void;
 }
 
 class LoopCls implements LoopApi{
 
+  var initialized : Bool;
+
+  /**
+    If I use a static var for the ZERO Loop, the event loop is not initialized.
+    If I don't, I can't be sure it's on the main thread.
+    Not sure about initializing the event loop.
+  **/
+  public function initialize(){
+    if(!initialized){
+      initialized = true;
+      stx.async.Hook.notify(this);
+    }
+  }
   public function new(){
-    this.suspended  = 0;
-    this.threads    = [];
+    this.suspended    = 0;
+    this.threads      = [];
+    this.initialized  = false;
+    //initialize();// nb this is too early
   }
   var suspended : Int;
   var threads   : Array<Work>;
 
   public function add(work:Work){
     __.log()('add: $work');
+    initialize();
     threads.push(work);
   }
   public function crack(error:Dynamic){
@@ -85,16 +103,21 @@ class LoopCls implements LoopApi{
   static public function Event(){
     return new stx.async.loop.term.Event();
   }
-  public function ignition():Void{
+  private function ignition(v:HookTag):Void{
     __.crack(__.fault().err(FailCode.E_AbstractMethod));
   }
 }
 
 @:forward abstract Loop(LoopApi) from LoopApi to LoopApi{
+
+  @:nb("Too early to use `stx.Log` inside here as it uses `tink.Signal.defer() -> Timer.delay() -> Thread.current()`.")
   static public var ZERO(default,null):Loop = #if sys Loop.Thread() #else Loop.Event() #end;
   #if sys
   static public function Thread(){
     return new stx.async.loop.term.Thread();
   }
   #end
+  static public function Event(){
+    return new stx.async.loop.term.Event();
+  }
 }

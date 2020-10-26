@@ -4,14 +4,13 @@ class Event extends LoopCls{
   var tick : TickDef;
   override public function add(work:Work){
     super.add(work);
-    ignition();
   }
   function rec(){
     if(!reply()){
       tick.stop();
     }
   }
-  override public function ignition(){
+  override private function ignition(v:HookTag){
     if(tick == null){
       tick = MainLoop.add(rec);
     }

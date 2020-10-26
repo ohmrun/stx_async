@@ -14,13 +14,23 @@ import stx.async.test.type.TaskResultType;
 class Test{
   static public function main(){
     utest.UTest.run([
-      //new SubmitTest(),
+      new SubmitTest(),
       //new CrunchTest(),
       //new TaskClsTest(),
       //new TerminalTest()
-      new SubmitTest(),
-      //new LaterTest()
+      //new SubmitTest(),
+      //new LaterTest(),
+      //new ThreadTest()
     ]);
+  }
+}
+class DeferTest extends utest.Test{
+
+}
+class ThreadTest extends utest.Test{
+  public function test(){
+    //var thread = (@:privateAccess haxe.EntryPoint.mainThread);
+    //trace(thread);
   }
 }
 class LaterTest extends utest.Test{
@@ -49,7 +59,6 @@ class SubmitTest extends utest.Test{
             }
           )
         );
-        loop.ignition();
   }
 }
 class CrunchTest extends utest.Test{

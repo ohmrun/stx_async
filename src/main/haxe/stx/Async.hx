@@ -13,6 +13,11 @@ typedef Timer         = stx.async.Timer;
 typedef GoalStatus    = stx.async.GoalStatus;
 typedef LoopCls       = stx.async.Loop.LoopCls;
 typedef Loop          = stx.async.Loop;
+typedef Hook          = stx.async.Hook;
+typedef HookTag       = stx.async.Hook.HookTag;
+typedef LogicalClock  = stx.async.LogicalClock;
+typedef TimeStamp     = stx.async.TimeStamp;
+
 
 typedef TickDef = {
   public function delay(float:Null<Float>):Void;
