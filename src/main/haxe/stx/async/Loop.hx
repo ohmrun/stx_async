@@ -42,7 +42,7 @@ class LoopCls implements LoopApi{
   var threads   : Array<Work>;
 
   public function add(work:Work){
-    __.log()('add: $work');
+    __.log().debug('add: work');
     initialize();
     threads.push(work);
   }

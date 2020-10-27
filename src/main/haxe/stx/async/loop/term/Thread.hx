@@ -28,8 +28,8 @@ class Thread extends LoopCls{
     }
   }
   override public function ignition(v:HookTag){
-    //trace('thread: ignition');
     if(!ignitioned){
+      __.log().debug('thread: ignition');
       this.ignitioned = true;
       sys.thread.Thread.create(rec);
     }
