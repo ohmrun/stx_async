@@ -10,8 +10,8 @@
         "0b1kn00b"
     ],
 "releasenote": "see CHANGELOG.md",
-    "version": "1.1.0",
-    "url": "https://github.com/ohmrun/stx_nano",
+    "version": "1.2.0",
+    "url": "https://github.com/ohmrun/stx_async",
     "dependencies": {
         "tink_core" : "2.0.0-rc.1",
         "stx_pico"  : "1.0.0",
