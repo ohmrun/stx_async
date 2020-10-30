@@ -1,7 +1,7 @@
 package stx.async.task.term;
 
 class FutureOutcome<T,E> extends TaskCls<T,E>{
-  var delegate : Future<Outcome<T,E>>;
+  var delegate : Future<Outcome<T,Defect<E>>>;
   var started  : Bool;
 
   public function new(delegate){
@@ -16,6 +16,7 @@ class FutureOutcome<T,E> extends TaskCls<T,E>{
       this.started = true;
       this.delegate.handle(
         (oc) -> {
+          __.log()(oc);
           oc.fold(
             ok -> {
               this.result = ok;
@@ -23,7 +24,7 @@ class FutureOutcome<T,E> extends TaskCls<T,E>{
               this.loaded = true;
               null;
             },
-            (no:E) -> {
+            (no:Array<E>) -> {
               this.defect = no;
               this.status = Problem;
               null;
@@ -32,6 +33,7 @@ class FutureOutcome<T,E> extends TaskCls<T,E>{
           this.trigger.trigger(Noise);
         }
       );
+
     }
   }
 }

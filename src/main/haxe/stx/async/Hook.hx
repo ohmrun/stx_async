@@ -6,7 +6,7 @@ package stx.async;
 class Hook{
   @:isVar private static var initialized(get,set) : Bool;
   static private function get_initialized(){
-    return initialized == null ? initialized = false : initialized;
+    return __.option(initialized).is_defined() ? initialized : initialized = false;
   }
   static private function set_initialized(b:Bool):Bool{
     return initialized = b;

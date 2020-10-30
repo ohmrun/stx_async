@@ -10,9 +10,9 @@ class Later<T,E> extends TaskCls<T,E>{
     this.started  = false;
   }
   override public inline function pursue(){
-    __.log().close().debug('pursue: loaded: $loaded defect $defect');
-    if(!this.loaded && defect==null){
-      __.log().close().debug('pursue');
+    __.log().debug('pursue: loaded: $loaded defect $defect');
+    if(!this.loaded && !defect.is_defined()){
+      __.log().debug('pursue');
       if(!this.started){
         this.started = true;
         this.delegate.handle(
@@ -21,15 +21,21 @@ class Later<T,E> extends TaskCls<T,E>{
           }
         );
         if(this.further == null){
+          __.log().debug('async');
           this.status = Waiting;
           init_signal();
           this.delegate.handle(
             (next) -> {
               __.log().debug('later received');
+              this.status = this.further.status;
+              this.defect = this.further.defect;
+              this.loaded = this.further.loaded;
+
               this.trigger.trigger(Noise);
             }
           );
         }else{
+          __.log().debug('sync');
           this.further.pursue();
           this.status = this.further.status;
           this.defect = this.further.defect;
@@ -43,7 +49,7 @@ class Later<T,E> extends TaskCls<T,E>{
       }
     }
   }
-  public function toString(){
-    return this.further == null ? '?' : this.further.toString();
+  override public function toString(){
+    return this.further == null ? 'Later(?)' : this.further.toString();
   }
 }

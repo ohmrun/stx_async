@@ -31,7 +31,12 @@ class Thread extends LoopCls{
     if(!ignitioned){
       __.log().debug('thread: ignition');
       this.ignitioned = true;
-      sys.thread.Thread.create(rec);
+      sys.thread.Thread.create(
+        () -> {
+          @:privateAccess sys.thread.Thread.initEventLoop();
+          rec();
+        }
+      );
     }
   }
 }

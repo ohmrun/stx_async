@@ -6,7 +6,7 @@ class Event extends LoopCls{
     super.add(work);
   }
   function rec(){
-    if(!reply()){
+    if(!reply() && tick!=null){
       tick.stop();
     }
   }

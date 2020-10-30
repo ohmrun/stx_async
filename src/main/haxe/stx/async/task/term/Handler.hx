@@ -1,8 +1,8 @@
 package stx.async.task.term;
 
 class Handler<T,E> extends TaskCls<T,E>{
-  var delegate : TaskApi<T,E>;
-  var handler  : Outcome<T,E> -> Void;
+  var delegate : Task<T,E>;
+  var handler  : Outcome<T,Defect<E>> -> Void;
   var called   : Bool;
   public function new(delegate,handler){
     super();
@@ -42,5 +42,9 @@ class Handler<T,E> extends TaskCls<T,E>{
         default : 
       }
     }
+  }
+  override public function toString(){
+    var id = this.delegate.toString();
+    return 'Handler($id)';
   }
 }

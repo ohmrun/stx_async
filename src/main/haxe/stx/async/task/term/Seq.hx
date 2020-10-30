@@ -13,9 +13,10 @@ class Seq<T,Ti,E> extends TaskCls<Couple<T,Ti>,E>{
     this.sel = false;
   }
   override public function pursue(){
-    if(defect==null && !loaded){
+    if(!defect.is_defined() && !loaded){
       switch(this.sel){
         case false : 
+          __.log().debug('pursue');
           fst.pursue();
           switch(fst.status){
             case Pending :
@@ -40,7 +41,7 @@ class Seq<T,Ti,E> extends TaskCls<Couple<T,Ti>,E>{
           }
         case true : 
           snd.pursue();
-          __.log().debug('seq snd $snd ${snd.status}');
+          __.log().tag('stx.async.Seq').debug('seq snd $snd ${snd.status}');
           switch(snd.status){
             case Pending : 
             case Secured :
@@ -75,7 +76,7 @@ class Seq<T,Ti,E> extends TaskCls<Couple<T,Ti>,E>{
       } 
     }
   }
-  public function toString(){
-    return '$sel of $fst -> $snd';
+  override public function toString(){
+    return 'Seq($sel of $fst -> $snd)';
   }
 }

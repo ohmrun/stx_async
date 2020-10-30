@@ -5,7 +5,7 @@ class FlatMap<T,Ti,E> extends TaskCls<Ti,E>{
   var flat_map : T -> TaskApi<Ti,E>;
   var further  : Null<TaskApi<Ti,E>>;
 
-  public function new(deferred,flat_map){
+  public function new(deferred:TaskApi<T,E>,flat_map:T->TaskApi<Ti,E>){
     super();
     this.deferred = deferred;
     this.flat_map = flat_map;
@@ -22,7 +22,9 @@ class FlatMap<T,Ti,E> extends TaskCls<Ti,E>{
             this.defect = deferred.defect;
             this.status = Problem;
           case Waiting : 
+            #if debug
             __.assert().exists(this.deferred.signal);
+            #end
             this.status = Waiting;
             this.init_signal();
             this.deferred.signal.nextTime().handle(

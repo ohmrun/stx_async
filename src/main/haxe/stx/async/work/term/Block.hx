@@ -8,6 +8,7 @@ class Block extends TaskCls<Noise,Noise>{
   }
   override inline public function pursue(){
     this.deferred();
+    this.result = Noise;
     this.loaded = true;
     this.status = Secured;
   }

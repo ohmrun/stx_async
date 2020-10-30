@@ -1,5 +1,10 @@
 package stx.async.work;
 
+using stx.async.work.Crunch;
+
+function log(wildcard:Wildcard){
+  return stx.Log.unit().tag("stx.async.work.Crunch");
+}
 class Crunch{
   static public function apply(self:Work,loop:Loop):Void{
     loop          = __.option(loop).defv(Loop.ZERO);
@@ -9,12 +14,17 @@ class Crunch{
 
     while(true == cont){
       __.log().debug('crunch: suspended? $suspended');
+      if(self.defect.is_defined()){
+        loop.crack(self.defect);
+        cont = false;
+      }
       if(!suspended){
         self.pursue();
         if(self.loaded){
           __.log().debug("done");
           cont = false;
         }else{
+          __.log().debug('${self}');
           __.log().debug('status: ${self.status}');
           switch(self.status){
             case Waiting : 

@@ -22,7 +22,7 @@ class ChompyTask<T,E> extends TaskCls<T,E>{
         this.status = Secured;
       case TaskDefect(e):
         __.log()('defect: $e');
-        this.defect = e;
+        this.defect = [e];
         this.status = Problem;
       case TaskLater(ft) :
         __.log()('waiting');

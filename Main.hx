@@ -13,5 +13,6 @@ class Main {
 	static function init_log_facade(){
 		var f = stx.log.Facade.unit();
 				f.includes.push("stx.async");
+				f.level = WARN;
 	}
 }
