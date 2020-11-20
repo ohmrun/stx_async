@@ -1,0 +1,25 @@
+package stx.async.thread;
+
+class Eval implements ThreadCls{
+  private var delegate : eval.vm.NativeThread;
+
+  public function new(f:Void->Void){
+    this.delegate = new eval.vm.NativeThread(f);
+  }
+  public var events(get,never):EventLoop;
+  public inline function get_events(){
+    return this.delegate.events;
+  }
+  public inline function sendMessage(msg:Dynamic):Void{
+    this.delegate.sendMessage(mgs);
+  }
+  abstract public static function current():Thread{
+    
+  }
+  abstract public static function create(job:()->Void):Thread;
+  abstract public static function runWithEventLoop(job:()->Void):Void;
+  abstract public static function createWithEventLoop(job:()->Void):Thread;
+  abstract public static function readMessage(block:Bool):Dynamic;
+  abstract private static function initEventLoop():Void;
+  abstract private static function processEvents():Void;
+}

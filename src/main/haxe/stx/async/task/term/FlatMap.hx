@@ -11,11 +11,13 @@ class FlatMap<T,Ti,E> extends TaskCls<Ti,E>{
     this.flat_map = flat_map;
   }
   override public inline function pursue(){
-    if(defect == null && !loaded){
+    if(!defect.is_defined() && !loaded){
       if(further == null){
-        deferred.pursue();
         switch(deferred.status){
+          case Pending           :
+            deferred.pursue();
           case Applied | Secured : 
+            deferred.pursue();
             this.further = flat_map(deferred.result);
             this.status  = Pending;
           case Problem : 
@@ -34,9 +36,9 @@ class FlatMap<T,Ti,E> extends TaskCls<Ti,E>{
         }
       }else{
         if(!further.loaded){
-          further.pursue();
           switch(further.status){
             case Applied | Secured : 
+              further.pursue();
               this.loaded = true;
               this.status = Secured;
               this.result = further.result;
@@ -50,7 +52,9 @@ class FlatMap<T,Ti,E> extends TaskCls<Ti,E>{
               this.further.signal.nextTime().handle(
                 (_) -> this.trigger.trigger(Noise)
               );
-            case Pending | Working : 
+            case Pending  :
+              further.pursue();
+            case Working  : 
           }
         }else{
           this.result = further.result;
@@ -59,5 +63,8 @@ class FlatMap<T,Ti,E> extends TaskCls<Ti,E>{
         }
       }
     }
+  }
+  override public function toString(){
+    return 'FlatMap($deferred -> $further)';
   }
 }

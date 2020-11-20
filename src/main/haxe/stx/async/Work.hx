@@ -10,6 +10,10 @@ typedef WorkApi = Null<TaskApi<Any,Dynamic>>;
     return new Work(self);
   }
   static public var ZERO(default,null):Work = Unit();
+  
+  @:noUsing static public inline function unit():Work{
+    return Unit();
+  }
   @:noUsing static public inline function Unit():Work{
     return new stx.async.work.term.Unit().toWork();
   }
@@ -25,21 +29,28 @@ typedef WorkApi = Null<TaskApi<Any,Dynamic>>;
   @:from @:noUsing static public function fromFutureWork(ft:Future<Work>):Work{
     return Task.Later(ft.map(work -> work.toTaskApi())).toWork();
   }
+  @:from @:noUsing static public function Stamp(outcome:Outcome<Any,Defect<Dynamic>>):Work{
+    return new stx.async.work.term.Stamp(outcome);
+  }
   @:from static public function fromFunXX(fn:Void->Void):Work{
     return lift(new stx.async.work.term.Block(fn));
   }
   public inline function new(self) this = self;
  
   public function submit(?loop:Loop){
-    __.log().debug('submit: $loop');
+    loop = __.option(loop).defv(Loop.ZERO);
+    //__.log().debug('submit $this to: $loop');
     if(this!=null){
-      __.option(loop).defv(Loop.ZERO).add(this);
+      loop.add(this);
     }
   }
   public function latch<E>():Task<Any,E>{
     return cast this;
   }
-  public function crunch(?loop) stx.async.work.Crunch.apply(this,loop);
+  public function carrying<T,E>(oc:Outcome<T,Defect<E>>):Task<T,E>{
+    return new stx.async.task.term.Pause(this,new stx.async.task.term.Stamp(oc));
+  }
+  public inline function crunch(?loop) stx.async.work.Crunch.apply(this,loop);
 }
 class WorkLift{
   static public inline function seq(self:Work,that:Work):Work{

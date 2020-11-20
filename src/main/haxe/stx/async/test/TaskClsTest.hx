@@ -21,13 +21,13 @@ class TaskClsTest extends utest.Test{
     var called  = false;
     var trigger = Future.trigger();
     var self    = Task.Later(trigger.asFuture());
-    __.log()(self.status.toString());
+    //__.log()(self.status.toString());
     same(self.status,Pending);
     notNull(self.signal);
     self.signal.nextTime().handle(
       (_) -> {
         called = true;
-        __.log()(self);
+        //__.log()(self);
         same(Secured,self.status);
       }
     );

@@ -21,8 +21,16 @@ typedef LogicalClock  = stx.async.LogicalClock;
 typedef TimeStamp     = stx.async.TimeStamp;
 typedef GoalApi<E>    = stx.async.GoalApi<E>;
 typedef GoalDef<E>    = stx.async.GoalDef<E>;
-typedef Defect<E>     = stx.async.Defect<E>;
 
+#if target.threaded
+typedef RuntimeApi    = stx.async.Runtime.RuntimeApi;
+typedef Runtime       = stx.async.Runtime;
+
+typedef ThreadApi     = stx.async.Thread.ThreadApi;
+typedef ThreadDef     = stx.async.Thread.ThreadDef;
+typedef Thread        = stx.async.Thread;
+typedef ThreadMap     = stx.async.loop.term.Thread.ThreadMap;
+#end 
 typedef TickDef = {
   public function delay(float:Null<Float>):Void;
   public function stop():Void;
@@ -31,4 +39,9 @@ class Stat{
   public var last(default,null):Float;
   public var duration(default,null):Float;
   public function new(){}
+}
+class LiftDefectNoiseToErr{
+  static public inline function toErr<E>(e:Defect<Noise>,?pos:Pos):Err<E>{
+    return __.fault().err(E_UndefinedError);
+  }
 }

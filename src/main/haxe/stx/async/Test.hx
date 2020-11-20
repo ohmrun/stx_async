@@ -13,42 +13,18 @@ import stx.async.test.type.TaskResultType;
 
 class Test{
   static public function main(){
-    var data = [
-      new SubmitTest(),
-      new CrunchTest(),
-      new TaskClsTest(),
-      new TerminalTest(),
-      new LaterTest(),
-      new ThreadTest()
-    ];
-    
-    var poke = data.filter(
-      __.arrd([TaskClsTest]).map(__.that().iz)
-        .lfold1(__.that().or)
-        .defv(__.that().never())
-        .check()
+    stx.Test.test(
+      [
+        new SubmitTest(),
+        new CrunchTest(),
+        new TaskClsTest(),
+        new TerminalTest(),
+        new LaterTest(),
+        #if target.threaded
+          new ThreadTest()
+        #end
+      ],
+      [TerminalTest]
     );
-    utest.UTest.run(#if poke poke #else data #end);
-  }
-}
-class DeferTest extends utest.Test{
-
-}
-class SubmitTest extends utest.Test{
-  public function test(async:utest.Async){
-    var loop    = Loop.Thread();
-    var trigger = Future.trigger();
-    var next = Task.Later(trigger.asFuture());
-    var task = Task.Pure("hello");
-        loop.add(task.toWork().seq(next.toWork()));
-        trigger.trigger(
-          Task.Thunk(
-            () -> {
-              pass();
-              async.done();
-              return 1;
-            }
-          )
-        );
   }
 }

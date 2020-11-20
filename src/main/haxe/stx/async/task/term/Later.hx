@@ -10,9 +10,9 @@ class Later<T,E> extends TaskCls<T,E>{
     this.started  = false;
   }
   override public inline function pursue(){
-    __.log().debug('pursue: loaded: $loaded defect $defect');
+    //__.log().debug('pursue: loaded: $loaded defect $defect');
     if(!this.loaded && !defect.is_defined()){
-      __.log().debug('pursue');
+      //__.log().debug('pursue');
       if(!this.started){
         this.started = true;
         this.delegate.handle(
@@ -21,12 +21,12 @@ class Later<T,E> extends TaskCls<T,E>{
           }
         );
         if(this.further == null){
-          __.log().debug('async');
+          //__.log().debug('async');
           this.status = Waiting;
           init_signal();
           this.delegate.handle(
             (next) -> {
-              __.log().debug('later received');
+              //__.log().debug('later received');
               this.status = this.further.status;
               this.defect = this.further.defect;
               this.loaded = this.further.loaded;
@@ -35,14 +35,18 @@ class Later<T,E> extends TaskCls<T,E>{
             }
           );
         }else{
-          __.log().debug('sync');
-          this.further.pursue();
+          //__.log().debug('sync');
+          if(this.further.status == Pending){
+            this.further.pursue();
+          }
           this.status = this.further.status;
           this.defect = this.further.defect;
           this.loaded = this.further.loaded;
         }
       }else{
-        this.further.pursue();
+        if(this.further.status == Pending){
+          this.further.pursue();
+        }
         this.status = this.further.status;
         this.defect = this.further.defect;
         this.loaded = this.further.loaded;

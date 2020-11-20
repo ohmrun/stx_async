@@ -1,9 +1,13 @@
 package stx.async.work.term;
 
 class Unit extends TaskCls<Noise,Noise>{
-  override inline public function pursue(){
+  public function new(){
+    super();
+    this.status = Secured;
     this.result = Noise;
     this.loaded = true;
-    this.status = Secured;
+  }
+  override inline public function pursue(){
+    
   }
 }

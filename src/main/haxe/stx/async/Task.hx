@@ -3,6 +3,9 @@ package stx.async;
 import stx.async.task.term.*;
 
 typedef TaskDef<R,E> = GoalDef<E> & {
+  @:isVar public var id(get,null):String;
+  public function get_id():String;
+
   public var result(get,null):Null<R>;
   public function get_result():Null<R>;
 
@@ -15,6 +18,9 @@ typedef TaskDef<R,E> = GoalDef<E> & {
   //public function identifier():String;
 }
 interface TaskApi<R,E> extends GoalApi<E>{
+  @:isVar public var id(get,null):String;
+  public function get_id():String;
+  
   @:isVar public var result(get,null):Null<R>;
   public function get_result():Null<R>;
 
@@ -27,6 +33,11 @@ interface TaskApi<R,E> extends GoalApi<E>{
   //public function identifier():String;
 }
 class TaskCls<T,E> implements TaskApi<T,E> extends Clazz{
+  @:isVar public var id(get,null):String;
+  public function get_id():String{
+    return id == null ? id = __.uuid("xxxxx") : id;
+  }
+
   public function pursue():Void {}
   public function escape():Void {}
   
@@ -38,7 +49,7 @@ class TaskCls<T,E> implements TaskApi<T,E> extends Clazz{
 
   @:isVar public var result(get,null):Null<T>;
   public function get_result():Null<T>{
-    return result;
+    return this.result;
   }
   @:isVar public var signal(get,null):Null<tink.core.Signal<Noise>>;
   public function get_signal(){
@@ -77,8 +88,8 @@ class TaskCls<T,E> implements TaskApi<T,E> extends Clazz{
   }
 
   public function toString(){
-    var id = this.identifier().split(".").last().defv('Task');
-    return '$id(${status.toString()})';
+    var name = this.identifier().split(".").last().defv('Task');
+    return '$name:$id(${status.toString()})';
   }
 }
 @:using(stx.async.Task.TaskLift)
@@ -90,11 +101,14 @@ class TaskCls<T,E> implements TaskApi<T,E> extends Clazz{
   @:noUsing static public function FlatMap<T,Ti,E>(self:Task<T,E>,flat_map:T->Task<Ti,E>):Task<Ti,E>{
     return new FlatMap(self,flat_map);
   }
+  @:noUsing static public function ThroughBind<T,Ti,E>(self:Task<T,E>,through_bind:Outcome<T,Defect<E>>->Task<Ti,E>):Task<Ti,E>{
+    return new AnonThroughBind(self,through_bind);
+  }
   @:noUsing static public function Handler<T,E>(self:Task<T,E>,fn:Outcome<T,Defect<E>>->Void):Task<T,E>{
     return new Handler(self,fn);
   }
-  @:noUsing static public function FutureOutcome<T,E>(self:Future<Outcome<T,Defect<E>>>):Task<T,E>{
-    return new FutureOutcome(self);
+  @:noUsing static public function FutureOutcome<T,E>(self:Future<Outcome<T,Defect<E>>>,?pos:Pos):Task<T,E>{
+    return new FutureOutcome(self,pos);
   }
   @:noUsing static public function Later<T,E>(self:Future<Task<T,E>>):Task<T,E>{
     return lift(new Later(self));
@@ -104,6 +118,9 @@ class TaskCls<T,E> implements TaskApi<T,E> extends Clazz{
   }
   @:noUsing static public function Pause<T,E>(work:Work,task:Task<T,E>):Task<T,E>{
     return lift(new stx.async.task.term.Pause(work,task));
+  }
+  @:noUsing static public function After<T,E>(task:Task<T,E>,work:Work):Task<T,E>{
+    return lift(new stx.async.task.term.After(task,work));
   }
   @:noUsing static public function Map<T,Ti,E>(self:Task<T,E>,fn:T->Ti):Task<Ti,E>{
     return lift(new stx.async.task.term.Map(self,fn));

@@ -1,19 +1,21 @@
 package stx.async.work.term;
 
-/**
-  Compiler is secreting type information that I'm trying to remove, so
-**/
 class Shim implements WorkApi{
   var task : Task<Dynamic,Dynamic>;
   public function new(task){
     this.task = task;
   }
+  @:isVar public var id(get,null):String;
+  public function get_id():String{
+    return this.task.id;
+  }
+
 
   public var loaded(get,null):Bool;
   public inline function get_loaded(){
     return this.status == Secured;
   }
-  public function toWork():Work return Work.lift(this);
+  public inline function toWork():Work return Work.lift(this);
   public function toTaskApi():TaskApi<Any,Dynamic> return this;
 
   public var signal(get,null):tink.core.Signal<Noise>;

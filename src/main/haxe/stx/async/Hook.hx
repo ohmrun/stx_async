@@ -1,8 +1,5 @@
 package stx.async;
 
-/**
-  Too early to use `stx.Log` in the bootstrap as it uses `tink.Signal.defer() -> Timer.delay() -> Thread.current()`
-**/
 class Hook{
   @:isVar private static var initialized(get,set) : Bool;
   static private function get_initialized(){
@@ -17,11 +14,15 @@ class Hook{
   }
   static public function notify(loop:Loop){
     loops.push(loop);
-    initialize();
+    initialize();//TODO fix this.
   }
   static private inline function initialize(){
-    __.log().debug('initialize');
-    //__.log().info('initialize');
+    #if target.threaded
+      ////__.log().debug('initialize: ${__.option(Runtime.ZERO.main()).map( _ -> _.id)}');
+    #else
+      ////__.log().debug('initialize');
+    #end
+    ////__.log().info('initialize');
     if(initialized == false){
       initialized = true;
       initializing();
@@ -32,15 +33,15 @@ class Hook{
   // #if sys
   // @:nb("26/10/2020","Event loop is not available, so this way")
   // static private inline function initializing(){
-  //   //__.log().debug('initializing');
+  //   ////__.log().debug('initializing');
   //   initializer(()->{});
   // }
   // #else
   @:doc("In event targets, let the main() function finish before kicking off processing")
-  static private inline function initializing(){
-    __.log().debug('initializing');
+  static private function initializing(){
+    //__.log().debug('initializing');
     #if sys
-      //@:privateAccess sys.thread.Thread.initEventLoop();
+      trace(@:privateAccess sys.thread.Thread.current().events);
     #end
     var event : MainEvent = null;
         var get_event = () -> event.stop();
@@ -49,8 +50,8 @@ class Hook{
   //#end
 
   @:access(stx) static private inline function initializer(canceller:Void->Void){
-    __.log().debug('initializer');
-    //__.log().info('initializer');
+    //__.log().debug('initializer');
+    ////__.log().info('initializer');
     for(loop in loops){
       loop.ignition(new HookTag());
     }

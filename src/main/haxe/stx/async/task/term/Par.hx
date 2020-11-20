@@ -10,7 +10,7 @@ class Par<T,Ti,E> extends TaskCls<Couple<T,Ti>,E>{
     this.snd = snd;
   }
   override public function pursue(){
-    if(defect == null && !loaded){
+    if(!defect.is_defined() && !loaded){
       this.fst.pursue();
       this.snd.pursue();
       switch([this.fst.status,this.snd.status]){
