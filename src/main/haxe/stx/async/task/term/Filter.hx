@@ -3,7 +3,7 @@ package stx.async.task.term;
 abstract class Filter<R,Ri,E> extends Delegation<Ri,Task<R,E>,E>{
   public function new(delegation:Task<R,E>,?pos:Pos){
     super(delegation,pos);
-    //__.log()(delegation);
+    ////__.log()(delegation);
   }
   abstract function filter(r:R):Ri;
 

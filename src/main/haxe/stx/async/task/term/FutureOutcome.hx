@@ -21,16 +21,16 @@ class FutureOutcome<T,E> extends stx.async.task.Delegate<T,E>{
     this.delivered    = false;
   }
   private function handler(outcome:Outcome<T,Defect<E>>){
-    ////__.log().debug(outcome);
+    //////__.log().debug(outcome);
     this.response  = outcome;
     this.delivered = true;
 
     this.trigger.trigger(Noise);
   }
   override public function pursue(){
-    ////__.log().debug('pursue: ${status.toString()} $requested $delivered');
+    //////__.log().debug('pursue: ${status.toString()} $requested $delivered');
     if(!requested){
-      ////__.log().debug("requested");
+      //////__.log().debug("requested");
       this.requested = true;
       this.canceller = this.delegate.handle(handler);
     }

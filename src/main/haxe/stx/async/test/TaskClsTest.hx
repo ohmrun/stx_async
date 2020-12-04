@@ -1,10 +1,6 @@
 package stx.async.test;
 
 class TaskClsTest extends utest.Test{
-  public function test_cls(){
-    //var self = new stx.async.task.Direct();
-    //same(self.status,Pending);
-  }
   public function test_pure(){
     var self = Task.Pure(1);
     same(self.get_status(),Secured);
@@ -21,13 +17,13 @@ class TaskClsTest extends utest.Test{
     var called  = false;
     var trigger = Future.trigger();
     var self    = Task.Later(trigger.asFuture());
-    ////__.log()(self.status.toString());
+    //////__.log()(self.status.toString());
     same(self.get_status(),Pending);
     notNull(self.signal);
     self.signal.nextTime().handle(
       (_) -> {
         called = true;
-        ////__.log()(self);
+        //////__.log()(self);
         same(Secured,self.get_status());
       }
     );

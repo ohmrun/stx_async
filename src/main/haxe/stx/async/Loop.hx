@@ -44,7 +44,7 @@ abstract class LoopCls implements LoopApi{
   var threads   : List<Work>;
 
   public function add(work:Work){
-    //__.log().debug('add: $work');
+    ////__.log().debug('add: $work');
     initialize();
     threads.add(work);
   }
@@ -55,12 +55,12 @@ abstract class LoopCls implements LoopApi{
     
   }
   public function reply(){
-    //__.log()('$this');
+    ////__.log()('$this');
     var next : Option<Work> = __.option(threads.pop());
-    //__.log()('has next? ${next.is_defined()}');
+    ////__.log()('has next? ${next.is_defined()}');
       return if(next.is_defined()){
       for(work in next){
-        //__.log()('work on: $work of ${threads.length}');
+        ////__.log()('work on: $work of ${threads.length}');
         try{
           work.pursue();
         }catch(e:Dynamic){
@@ -69,11 +69,11 @@ abstract class LoopCls implements LoopApi{
         }
         
         var ready     = work.get_loaded();
-        //__.log()('$work');
+        ////__.log()('$work');
         if(!ready){
           switch(work.get_status()){
             case Waiting : 
-              //__.log().debug('suspend: $work');
+              ////__.log().debug('suspend: $work');
               suspended.push(work);
               work.signal.nextTime().handle(
                 (_) -> {
@@ -95,7 +95,7 @@ abstract class LoopCls implements LoopApi{
       }
       true;
     }else if(suspended.length > 0){
-      //__.log().debug(suspended.map(_ -> _.toString()));
+      ////__.log().debug(suspended.map(_ -> _.toString()));
       true;
     }else{
       false;

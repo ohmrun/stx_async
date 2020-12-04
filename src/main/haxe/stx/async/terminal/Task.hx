@@ -3,7 +3,7 @@ package stx.async.terminal;
 class Task<T,E> extends stx.async.goal.term.Seq implements stx.async.task.Api<T,E>{
   override public function get_status(){
     var result = super.get_status();
-    //__.log()(result.toString());
+    ////__.log()(result.toString());
     return result;
   }
   var delegate                    : stx.async.Task<T,E>;
@@ -28,7 +28,7 @@ class Task<T,E> extends stx.async.goal.term.Seq implements stx.async.task.Api<T,
     this.joiner   = joiner;
   }
   function join(oc:Outcome<T,Defect<E>>){
-    __.log()('JOINING: $work');
+    //__.log()('JOINING: $work');
     this.work = oc.fold(
       ok -> {
         return joiner(__.success(ok));
@@ -37,13 +37,13 @@ class Task<T,E> extends stx.async.goal.term.Seq implements stx.async.task.Api<T,
         return joiner(__.failure(no));
       }
     );
-    __.log()('JOINED: $work');
+    //__.log()('JOINED: $work');
   }
   override inline public function pursue(){
-    trace('terminal.Task.pursue() $this');
+    //__.log()('terminal.Task.pursue() $this');
     super.pursue();
     var lhs_status = lhs.get_status();
-    //__.log()('${get_id()} ${lhs_status}');
+    ////__.log()('${get_id()} ${lhs_status}');
     if(this.work == null){
       switch(lhs_status){
         case Problem : 
@@ -67,7 +67,7 @@ class Task<T,E> extends stx.async.goal.term.Seq implements stx.async.task.Api<T,
           );
         case Secured : 
            join(__.success(this.delegate.get_result()));
-          //__.log()(this.work);
+          ////__.log()(this.work);
       }
     }
   }

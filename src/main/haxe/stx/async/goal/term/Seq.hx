@@ -35,12 +35,12 @@ class Seq extends Delegate{
   }
   //defect.is_defined() && 
   override public function pursue(){
-    __.log()('pursue $this');
+    ////__.log()('pursue $this');
     //trace('$sel ${get_loaded()} ${lhs.get_loaded()} ${rhs.get_loaded()}');
     if(!get_loaded()){
       switch(this.sel){
         case false : 
-          __.log().debug('$lhs');
+          //__.log().debug('$lhs');
           switch(lhs.get_status()){
             case Problem :
             case Pending : 
@@ -68,12 +68,12 @@ class Seq extends Delegate{
               pursue();
           }
         case true : 
-          __.log().debug('rhs ${get_id()}:${rhs.get_status().toString()} $rhs');
+          //__.log().debug('rhs ${get_id()}:${rhs.get_status().toString()} $rhs');
           switch(rhs.get_status()){
             case Problem :
             case Pending : 
               rhs.pursue();
-              __.log().debug('rhs $rhs');
+              //__.log().debug('rhs $rhs');
               if(rhs.get_status() == Secured){
                 this.set_status(Secured);
               }
@@ -85,7 +85,7 @@ class Seq extends Delegate{
                 this.set_status(Waiting);
                 this.rhs.signal.nextTime().handle(
                   (_) -> {
-                    //__.log().debug('$rhs arrived');
+                    ////__.log().debug('$rhs arrived');
                     this.trigger.trigger(Noise);
                   }
                 );

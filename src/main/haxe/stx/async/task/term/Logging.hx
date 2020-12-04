@@ -10,7 +10,7 @@ class Logging<R,E> extends stx.async.task.term.Delegate<R,E>{
     this.showing    = __.option(showing).defv((t:Task<R,E>) -> t.toString());
   }
   override inline public function pursue(){
-    //__.log().debug(showing(delegate),__.here());
+    ////__.log().debug(showing(delegate),__.here());
     this.delegate.pursue();
   }
   override inline public function escape(){

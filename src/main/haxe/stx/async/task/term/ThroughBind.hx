@@ -14,10 +14,10 @@ abstract class ThroughBind<T,Ti,E> extends stx.async.task.Direct<Ti,E>{
   abstract function through_bind(outcome:Outcome<T,Defect<E>>):TaskApi<Ti,E>;
 
   override public inline function pursue(){
-    ////__.log()('loaded? $loaded $defect? $defect');
+    //////__.log()('loaded? $loaded $defect? $defect');
     if(!defect.is_defined() && !get_loaded()){
       if(further == null){
-        ////__.log().debug('call delegate: ${__.definition(delegate).identifier()} ${delegate.id} ${delegate.status.toString()}');
+        //////__.log().debug('call delegate: ${__.definition(delegate).identifier()} ${delegate.id} ${delegate.status.toString()}');
         switch(delegate.get_status()){
           case Applied : 
             delegate.pursue();

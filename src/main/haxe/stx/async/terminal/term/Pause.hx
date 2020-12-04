@@ -4,7 +4,7 @@ class Pause<R,E> extends Cls<R,E>{
   var work : stx.async.Work;
 
   public function new(work:stx.async.Work,?pos:Pos){
-    __.log()('terminal.Pause.new');
+    //__.log()('terminal.Pause.new');
     super(pos);
     this.work = work;
   }

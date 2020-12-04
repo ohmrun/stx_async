@@ -15,7 +15,7 @@ class Cls<R,E> implements Api<R,E> extends stx.async.goal.term.Direct{
     this.id         = Counter.next();
   }
   private function resolve(receiver:Receiver<R,E>,?pos:Pos):Receiver<R,E>{
-    __.log()('${this.identifier().name} resolve $receiver');
+    //__.log()('${this.identifier().name} resolve $receiver');
     var task                  = Task.After(receiver.prj(),this.toWork(),pos);
     return Receiver.lift(task.toTaskApi());
   }
@@ -41,7 +41,7 @@ class Cls<R,E> implements Api<R,E> extends stx.async.goal.term.Direct{
     //var this_id = this.get_id();
     //var that_id = term.get_id();
     this.handles.push(term.toTask());
-    //__.log()(next);
+    ////__.log()(next);
     return next;
   }
 
@@ -73,7 +73,7 @@ class Cls<R,E> implements Api<R,E> extends stx.async.goal.term.Direct{
     return dependent.get_defect().entype();
   } 
   override public function pursue(){
-    trace('terminal.Cls.pursue ${dependent.get_status().toString()}');
+    //__.log()('terminal.Cls.pursue ${dependent.get_status().toString()}');
     this.dependent.pursue();
     this.set_status(dependent.get_status());
   }

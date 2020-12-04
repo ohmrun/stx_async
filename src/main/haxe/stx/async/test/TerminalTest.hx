@@ -41,36 +41,36 @@ class TerminalTest extends utest.Test{
   }
   public function _test_cls(){
     var term = get_terminal().value(1);
-    __.log()(term);
+    //__.log()(term);
     var task      = term.prj();
         task.pursue();
-    __.log()(task);
+    //__.log()(task);
   }
-  public function test_one(){
+  public function _test_one(){
     var term = get_terminal();
-    __.log()("________________________");
+    //__.log()("________________________");
     var rest = term.joint(
       (oc) -> {
-        __.log()('USER JOIN CLOSURE: $oc');
+        //__.log()('USER JOIN CLOSURE: $oc');
         return term.value("HELLO").serve();
       } 
     );
-    __.log()("________________________");
-    __.log()(rest);
+    //__.log()("________________________");
+    //__.log()(rest);
     var task = rest.value(1);
-    __.log()("________________________");
+    //__.log()("________________________");
     var work = task.serve();
     trace(work);
       trace("PURSUE 1");
       work.pursue();
-      __.log()("________________________");
+      //__.log()("________________________");
       trace(work);
       trace('PURSUE 2 ');
       work.pursue();
       // work.pursue();
       // work.pursue();
       // work.pursue();
-      __.log()("________________________");
+      //__.log()("________________________");
       trace(work);
       trace('PURSUE 3 ');
       work.pursue();
@@ -94,9 +94,9 @@ class TerminalTest extends utest.Test{
     //     work.pursue();
     // trace("PURSUE");
     //     work.pursue();
-    equals(0,work.get_status());
+    equals(4,work.get_status());
   }
-  public function _test_terminal_cascade(){
+  public function test_terminal_cascade(){
     var v     = None;
     var t     = get_terminal();
     var task  = Task.Handler(
@@ -108,33 +108,36 @@ class TerminalTest extends utest.Test{
     var n = t.joint(
           (oc) -> {
             same(__.success(1),oc);
-            __.log().debug('FIRST: $oc');
+            __.log().debug('SECOND: $oc');
             return t.value(100).serve();
           }
-        ).joint(
+        );
+    //TODO how to disallow joint.joint chain;
+    var m = n.joint(
           (oc) -> {
-            __.log().debug('SECOND: $oc');
-            same(__.success(100),oc);
-            return t.value(60).serve();
+            __.log().debug('FIRST: $oc');
+            same(__.success(1),oc);
+            return n.value(60).serve();
           }
         );
 
-    var w = n.value(1).serve();
+    var w = m.value(1).serve();
     var c = w;
-        trace(c);
-        c.pursue();
-        trace("_____________________");
-        c.pursue();
-        trace(c);
-        trace("_____________________");
-        c.pursue();
-        trace(c);
-        // c.pursue();
-        // c.pursue();
-        // c.pursue();
-        // c.pursue();
-        // c.pursue();
         //trace(c);
+        c.pursue();
+        trace("_____________________");
+        c.pursue();
+        //trace(c);
+        trace("_____________________");
+        c.pursue();
+        //trace(c);
+        c.pursue();
+        c.pursue();
+        c.pursue();
+        c.pursue();
+        c.pursue();
+        c.pursue();c.pursue();c.pursue();c.pursue();c.pursue();c.pursue();c.pursue();
+        trace(c);
   }
   public function _test(){
     var terminal  = get_terminal();
@@ -146,7 +149,7 @@ class TerminalTest extends utest.Test{
 
     var b         = terminal.inner(
       (oc) -> {
-        //__.log()('trigger: $oc');
+        ////__.log()('trigger: $oc');
         f.trigger(__.log().close().through()(oc.map(i -> ++i)));
       }
     );
@@ -161,7 +164,7 @@ class TerminalTest extends utest.Test{
     var methodI   = function(i:Int,cont:Terminal<String,Noise>):Work{
       var joint = cont.joint(
         (oc:stx.Outcome<String,Defect<Noise>>) -> {
-          //__.log().debug(oc);
+          ////__.log().debug(oc);
           return oc.fold(
             (ok) -> methodII('$i',cont),
             (no) -> Work.Stamp(__.failure(no))

@@ -8,12 +8,15 @@ class Joint<R,E> extends Cls<R,E>{
 
   public function new(joiner:Outcome<R,Defect<E>>->Work,?pos:Pos){
     super(pos);
-    __.log()('Joint.new $id');
+    //__.log()('Joint.new $id');
     this.called   = false;
     this.joiner   = joiner;   
-  } 
+  }
+  // private function release<RR,EE>(term:Terminal<RR,EE>,?pos:Pos):Terminal<RR,EE>{
+  //   return new stx.async.terminal.Task(term,joining,pos);
+  // }
   @:access(stx.async) override private inline function resolve(receiver:Receiver<R,E>,?pos:Pos):Receiver<R,E>{
-    __.log().debug('resolve $receiver on $this');
+    //__.log().debug('resolve $receiver on $this');
     return (
       Receiver.lift(
         new stx.async.terminal.Task(receiver.prj(),joining,pos)
@@ -28,7 +31,7 @@ class Joint<R,E> extends Cls<R,E>{
     return if(!called){
       called = true;
       var result = joiner(outcome);
-      __.log()('JOINT RETURNS $result');
+      //__.log()('JOINT RETURNS $result');
       result;
     }else{
       //throw 'rejoin';
@@ -39,7 +42,7 @@ class Joint<R,E> extends Cls<R,E>{
     return called ? this.status : Pending;
   }
   override public function pursue(){
-    __.log()(this);
+    //__.log()(this);
     super.pursue();
   }
 }

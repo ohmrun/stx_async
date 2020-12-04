@@ -8,7 +8,7 @@ function log(wildcard:Wildcard){
 
 class Event extends LoopCls{
   public function new(){
-    //__.log().info('EVENT LOOP');
+    ////__.log().info('EVENT LOOP');
     super();
   }
   var tick : TickDef;
@@ -17,7 +17,7 @@ class Event extends LoopCls{
   }
   function rec(){
     if(!reply() && tick!=null){
-      //__.log().info('done');
+      ////__.log().info('done');
       tick.stop();
       exit();
     }

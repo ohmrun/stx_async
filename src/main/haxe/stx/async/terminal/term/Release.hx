@@ -5,7 +5,7 @@ class Release<R,E> extends Delegate<R,E>{
   var work : Work;
 
   public function new(delegate:Terminal<R,E>,work:Work,?pos:Pos){
-    __.log()('Release.new');
+    //__.log()('Release.new');
     super(delegate,pos);
     this.work = work;
   }
@@ -19,7 +19,7 @@ class Release<R,E> extends Delegate<R,E>{
     return resolve(super.error(err,pos),pos);
   }
   @:access(stx.async) override private function resolve(receiver:Receiver<R,E>,?pos:Pos):Receiver<R,E>{
-    __.log().debug('resolve $receiver on $this');
+    //__.log().debug('resolve $receiver on $this');
     return Receiver.lift(
       Task.After(
         @:privateAccess receiver.prj(),
@@ -29,7 +29,6 @@ class Release<R,E> extends Delegate<R,E>{
     );
   }
   override public function pursue(){
-    trace(this.delegate);
     super.pursue();
   }
 } 

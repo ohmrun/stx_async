@@ -4,7 +4,7 @@ using stx.Log;
 
 class Main {
 	static function main() {
-		//__.log()("main");
+		//////__.log()("main");
 		init_log_facade();
 		stx.async.Test.main();
 		//var test = new stx.async.Test.SubmitTest();
@@ -13,8 +13,9 @@ class Main {
 	static function init_log_facade(){
 		var f = stx.log.Facade.unit();
 				f.includes.push("stx.async");
-				//f.includes.push("stx.async.work.Crunch");
+				f.includes.push("stx.async.Loop");
+				f.includes.push("stx.async.work.Crunch");
 				f.includes.push(Terminal.identifier());
-				f.level = DEBUG;
+				//f.level = DEBUG;
 	}
 }

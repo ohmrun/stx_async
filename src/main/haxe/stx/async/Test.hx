@@ -52,7 +52,7 @@ class GoalSeqTest extends utest.Test{
     same(Secured,@:privateAccess goal_seq.lhs.get_status());
     goal_seq.pursue();
     same(true,@:privateAccess goal_seq.sel);
-    __.log()(goal_seq.get_status());
+    //__.log()(goal_seq.get_status());
     same(Secured,goal_seq.get_status());
   }
 }

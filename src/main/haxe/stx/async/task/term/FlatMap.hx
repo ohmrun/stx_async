@@ -11,7 +11,7 @@ abstract class FlatMap<T,Ti,E> extends stx.async.task.Direct<Ti,E>{
   public abstract function flat_map(t:T):TaskApi<Ti,E>;
   
   override public inline function pursue(){
-    //__.log()('$deferred $further');
+    ////__.log()('$deferred $further');
     if(!defect.is_defined() && !get_loaded()){
       if(further == null){
         switch(deferred.get_status()){

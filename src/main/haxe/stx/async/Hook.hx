@@ -22,11 +22,11 @@ class Hook{
   }
   static private inline function initialize(){
     #if target.threaded
-      //__.log().debug('initialize: ${__.option(Runtime.ZERO.main()).map( _ -> _.id)}');
+      ////__.log().debug('initialize: ${__.option(Runtime.ZERO.main()).map( _ -> _.id)}');
     #else
-      //__.log().debug('initialize');
+      ////__.log().debug('initialize');
     #end
-    //__.log().info('initialize');
+    ////__.log().info('initialize');
     if(initialized == false){
       initialized = true;
       initializing();
@@ -37,13 +37,13 @@ class Hook{
   // #if sys
   // @:nb("26/10/2020","Event loop is not available, so this way")
   // static private inline function initializing(){
-  //   //__.log().debug('initializing');
+  //   ////__.log().debug('initializing');
   //   initializer(()->{});
   // }
   // #else
   @:doc("In event targets, let the main() function finish before kicking off processing")
   static private function initializing(){
-    //__.log().debug('initializing');
+    ////__.log().debug('initializing');
     #if sys
       //trace(@:privateAccess sys.thread.Thread.current().events);
     #end
@@ -54,7 +54,7 @@ class Hook{
   //#end
 
   @:access(stx) static private inline function initializer(canceller:Void->Void){
-    //__.log().debug('initializer');
+    ////__.log().debug('initializer');
     for(loop in loops){
       loop.ignition(new HookTag());
     }

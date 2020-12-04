@@ -11,22 +11,22 @@ class Crunch{
     var cont      = true;
     var suspended = false;
     var backoff   = 0.2;
-    //__.log().debug('$self');
+    ////__.log().debug('$self');
     while(true == cont){
-      //__.log().debug('suspended? $suspended');
+      ////__.log().debug('suspended? $suspended');
       if(self.get_defect().is_defined()){
         loop.fail(self.get_defect());
         cont = false;
       }
       if(!suspended){
         self.pursue();
-        //__.log()(self);
+        ////__.log()(self);
         if(self.get_loaded()){
-          //__.log().debug("done");
+          ////__.log().debug("done");
           cont = false;
         }else{
-          //__.log().debug('${self}');
-          //__.log().debug('status: ${self.get_status().toString()}');
+          ////__.log().debug('${self}');
+          ////__.log().debug('status: ${self.get_status().toString()}');
           switch(self.get_status()){
             case Waiting : 
               suspended = true;
