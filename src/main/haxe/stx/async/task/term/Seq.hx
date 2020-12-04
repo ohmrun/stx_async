@@ -1,82 +1,29 @@
 package stx.async.task.term;
 
-class Seq<T,Ti,E> extends TaskCls<Couple<T,Ti>,E>{
-  var fst : TaskApi<T,E>;
-  var snd : TaskApi<Ti,E>;
+class Seq<T,Ti,E> extends stx.async.goal.term.Seq implements stx.async.task.Api<Couple<T,Ti>,E>{
+  var lhs_task : Task<T,E>;
+  var rhs_task : Task<Ti,E>;
 
-  var sel : Bool;
-
-  public function new(fst:TaskApi<T,E>,snd:TaskApi<Ti,E>){
-    super();
-    this.fst = fst;
-    this.snd = snd;
-    this.sel = false;
-  }
-  override public inline function pursue(){
-    if(!defect.is_defined() && !loaded){
-      switch(this.sel){
-        case false : 
-          //__.log().debug('pursue');
-          switch(fst.status){
-            case Pending :
-              fst.pursue();
-            case Secured : 
-              sel = true;
-            case Problem : 
-              this.defect = fst.defect;
-            case Waiting : 
-              if(!this.fst.loaded){
-                init_signal();
-                __.assert().exists(this.fst.signal);
-                this.status = Waiting;
-                this.fst.signal.nextTime().handle(
-                  (_) -> this.trigger.trigger(Noise)
-                );
-              }else{
-                sel = true;
-              }
-            case Working : 
-            case Applied : 
-              sel = true;
-          }
-        case true : 
-          //__.log().tag('stx.async.Seq').debug('seq snd $snd ${snd.status.toString()}');
-          switch(snd.status){
-            case Pending : 
-              snd.pursue();
-            case Secured :
-              loaded = true;
-              this.status = Secured;
-              this.result = __.couple(this.fst.result,this.snd.result);
-            case Waiting : 
-              if(!this.snd.loaded){
-                init_signal();
-                __.assert().exists(this.snd.signal);
-                this.status = Waiting;
-                this.snd.signal.nextTime().handle(
-                  (_) -> {
-                    //__.log().debug('$snd arrived');
-                    this.trigger.trigger(Noise);
-                  }
-                );
-              }else{
-                __.assert().exists(this.fst.result);
-                __.assert().exists(this.snd.result);
-                this.status = Secured;
-                this.result = __.couple(this.fst.result,this.snd.result);
-              }
-            case Problem :
-              this.defect = snd.defect;
-            case Applied :
-              this.loaded = true;
-              this.result = __.couple(this.fst.result,this.snd.result);
-              this.status = Secured;
-            case Working : 
-          }
-      } 
-    }
+  public function new(lhs:TaskApi<T,E>,rhs:TaskApi<Ti,E>,?pos:Pos){
+    super(lhs,rhs,pos);
+    this.lhs_task = lhs;
+    this.rhs_task = rhs;
   }
   override public function toString(){
-    return 'Seq($sel of $fst -> $snd)';
+    var name = this.identifier().name;
+    var self_status = this.status == null ? '<auto>' : "";
+    return 'task.$name:${get_id()}[$self_status${this.get_status().toString()}]($sel of $lhs ==> $rhs)';
+  }
+  public function get_defect(){
+    return this.lhs_task.get_defect().concat(this.rhs_task.get_defect());
+  }
+  public function get_result():Null<Couple<T,Ti>>{
+    return __.couple(this.lhs_task.get_result(),this.rhs_task.get_result());
+  }
+  public function toWork(?pos:Pos):Work{
+    return this;
+  }
+  public function toTaskApi():TaskApi<Couple<T,Ti>,E>{
+    return this;
   }
 }

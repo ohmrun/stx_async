@@ -1,14 +1,10 @@
 package stx.async.task.term;
 
-class Pause<R,E> extends FlatMap<Any,R,E>{
-  public function new(work:Work,next:Task<R,E>){
-    super(
-      work.latch(),
-      (_:Any) -> next  
-    );
+class Pause<R,E> extends Filter<Couple<Any,R>,R,E>{
+  override function filter(tp:Couple<Any,R>):R{
+    return tp.snd();
   }
-  override public function toString(){
-    var spr = super.toString();
-    return 'Pause($spr)';
+  public function new(work:Work,next:Task<R,E>,?pos:Pos){
+    super(Task.Seq(work.latch(),next),pos);
   }
 }

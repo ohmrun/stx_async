@@ -1,5 +1,9 @@
 package stx.async;
 
+using stx.async.Hook;
+function log(wildcard:Wildcard){
+  return stx.async.Log.log(__).tag(__.here().lift().identifier());
+}
 class Hook{
   @:isVar private static var initialized(get,set) : Bool;
   static private function get_initialized(){
@@ -18,11 +22,11 @@ class Hook{
   }
   static private inline function initialize(){
     #if target.threaded
-      ////__.log().debug('initialize: ${__.option(Runtime.ZERO.main()).map( _ -> _.id)}');
+      //__.log().debug('initialize: ${__.option(Runtime.ZERO.main()).map( _ -> _.id)}');
     #else
-      ////__.log().debug('initialize');
+      //__.log().debug('initialize');
     #end
-    ////__.log().info('initialize');
+    //__.log().info('initialize');
     if(initialized == false){
       initialized = true;
       initializing();
@@ -33,7 +37,7 @@ class Hook{
   // #if sys
   // @:nb("26/10/2020","Event loop is not available, so this way")
   // static private inline function initializing(){
-  //   ////__.log().debug('initializing');
+  //   //__.log().debug('initializing');
   //   initializer(()->{});
   // }
   // #else
@@ -41,7 +45,7 @@ class Hook{
   static private function initializing(){
     //__.log().debug('initializing');
     #if sys
-      trace(@:privateAccess sys.thread.Thread.current().events);
+      //trace(@:privateAccess sys.thread.Thread.current().events);
     #end
     var event : MainEvent = null;
         var get_event = () -> event.stop();
@@ -51,7 +55,6 @@ class Hook{
 
   @:access(stx) static private inline function initializer(canceller:Void->Void){
     //__.log().debug('initializer');
-    ////__.log().info('initializer');
     for(loop in loops){
       loop.ignition(new HookTag());
     }

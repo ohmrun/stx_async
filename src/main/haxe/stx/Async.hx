@@ -3,9 +3,12 @@ class Async{
   static public function timer(wildcard:Wildcard) return new Timer();
 }
 
-typedef TaskDef<R,E>  = stx.async.Task.TaskDef<R,E>;
-typedef TaskApi<R,E>  = stx.async.Task.TaskApi<R,E>;
-typedef TaskCls<R,E>  = stx.async.Task.TaskCls<R,E>;
+typedef TaskDef<R,E>  = stx.async.task.Def<R,E>;
+typedef TaskApi<R,E>  = stx.async.task.Api<R,E>;
+//typedef TaskCls<R,E>  = stx.async.task.Cls<R,E>;
+
+typedef DeclaredApi   = stx.async.declared.Api;
+
 typedef Task<R,E>     = stx.async.Task<R,E>;
 typedef WorkApi       = stx.async.Work.WorkApi;
 typedef Work          = stx.async.Work;
@@ -19,8 +22,23 @@ typedef Hook          = stx.async.Hook;
 typedef HookTag       = stx.async.Hook.HookTag;
 typedef LogicalClock  = stx.async.LogicalClock;
 typedef TimeStamp     = stx.async.TimeStamp;
-typedef GoalApi<E>    = stx.async.GoalApi<E>;
-typedef GoalDef<E>    = stx.async.GoalDef<E>;
+
+@:forward abstract Goal(GoalApi) from GoalApi to GoalApi{
+  @:noUsing static public function lift(self) return new Goal(self);
+  public function new(self) this = self;
+
+  @:noUsing static public function Seq(lhs,rhs,?pos:Pos){
+    return new stx.async.goal.term.Seq(lhs,rhs,pos);
+  }
+  @:noUsing static public function Thunk(thunk,?pos:Pos){
+    return new stx.async.goal.term.Thunk(thunk,pos);
+  }
+  // @:from public function fromTask<T,E>(task:Task<T,E>){
+  //   return new stx.async
+  // }
+}
+typedef GoalApi       = stx.async.goal.Api;
+typedef GoalDef       = stx.async.goal.Def;
 
 #if target.threaded
 typedef RuntimeApi    = stx.async.Runtime.RuntimeApi;

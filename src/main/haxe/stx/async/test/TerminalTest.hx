@@ -4,24 +4,137 @@ typedef Arw<T,Ti> = T -> Terminal<Ti,Noise> -> Work;
 
 class TerminalTest extends utest.Test{
   private static function get_terminal<R,E>():Terminal<R,E>{
-    return @:privateAccess new Terminal();
+    return @:privateAccess Terminal.ZERO;
   }
-  public function test_terminal_cascade(){
-    var t = get_terminal();
+  public function _test_shim(){
+    var term    = get_terminal();
+    var result  = term.value(1);
+    var shim    = Work.Shim(term.toTask());
+    same(Secured,shim.get_status());
+  }
+  public function _test_release(){
+    var term      = get_terminal();
+    var work      = Work.unit();
+    var release   = new stx.async.terminal.term.Release(term,work);
+    trace(release);
+    var value     = release.value(1);
+    var receiver  = value.serve();
+    trace(receiver);
+          receiver.pursue();
+          receiver.pursue();
+          receiver.pursue();
+    trace(receiver);
+  }
+  public function _test_terminal_task(){
+    var term      = get_terminal();
+    var task      = new stx.async.terminal.Task(
+      Task.Pure(1),
+      (oc) -> {
+        trace("RRERER");
+        return Work.Unit();
+      }
+    );
+    trace(task);
+          task.pursue();
+          task.pursue();
+    trace(task);
+  }
+  public function _test_cls(){
+    var term = get_terminal().value(1);
+    __.log()(term);
+    var task      = term.prj();
+        task.pursue();
+    __.log()(task);
+  }
+  public function test_one(){
+    var term = get_terminal();
+    __.log()("________________________");
+    var rest = term.joint(
+      (oc) -> {
+        __.log()('USER JOIN CLOSURE: $oc');
+        return term.value("HELLO").serve();
+      } 
+    );
+    __.log()("________________________");
+    __.log()(rest);
+    var task = rest.value(1);
+    __.log()("________________________");
+    var work = task.serve();
+    trace(work);
+      trace("PURSUE 1");
+      work.pursue();
+      __.log()("________________________");
+      trace(work);
+      trace('PURSUE 2 ');
+      work.pursue();
+      // work.pursue();
+      // work.pursue();
+      // work.pursue();
+      __.log()("________________________");
+      trace(work);
+      trace('PURSUE 3 ');
+      work.pursue();
+      work.pursue();
+      work.pursue();
+      //work.pursue();
+      trace(work);
+    //trace(term);
+    //trace("PURSUE");
+    //     work.pursue();
+    // trace("PURSUE");
+    //     work.pursue();
+    // var done = rest.value(1);
+    // trace(done);
+    // var work = done.serve();
+    // trace("PURSUE");
+    //     work.pursue();
+    // trace("PURSUE");
+    //     work.pursue();
+    // trace("PURSUE");
+    //     work.pursue();
+    // trace("PURSUE");
+    //     work.pursue();
+    equals(0,work.get_status());
+  }
+  public function _test_terminal_cascade(){
+    var v     = None;
+    var t     = get_terminal();
+    var task  = Task.Handler(
+      Task.Pure(100),
+      (x) -> {
+        v = __.option(x.fudge());
+      }
+    );
     var n = t.joint(
           (oc) -> {
-            //__.log()(oc);
-            return Work.ZERO;
+            same(__.success(1),oc);
+            __.log().debug('FIRST: $oc');
+            return t.value(100).serve();
           }
         ).joint(
           (oc) -> {
-            //__.log()(oc);
-            return Work.ZERO;
+            __.log().debug('SECOND: $oc');
+            same(__.success(100),oc);
+            return t.value(60).serve();
           }
         );
 
     var w = n.value(1).serve();
-        w.crunch();
+    var c = w;
+        trace(c);
+        c.pursue();
+        trace("_____________________");
+        c.pursue();
+        trace(c);
+        trace("_____________________");
+        c.pursue();
+        trace(c);
+        // c.pursue();
+        // c.pursue();
+        // c.pursue();
+        // c.pursue();
+        // c.pursue();
+        //trace(c);
   }
   public function _test(){
     var terminal  = get_terminal();

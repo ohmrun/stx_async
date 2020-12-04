@@ -1,7 +1,7 @@
 package stx.async.test.type;
 
 
-class ChompyTask<T,E> extends TaskCls<T,E>{
+class ChompyTask<T,E> extends stx.async.task.Direct<T,E>{
   var sequence : Array<TaskResultType<T,E>>;
   var index    : Int; 
   public function new(sequence:Array<TaskResultType<T,E>>){
@@ -15,17 +15,17 @@ class ChompyTask<T,E> extends TaskCls<T,E>{
   private function handle(self:TaskResultType<T,E>){
     switch(self){
       case TaskPursue       : 
-        //__.log()('pursue');
+        ////__.log()('pursue');
       case TaskResult(t)    :
-        //__.log()('result: $t');
+        ////__.log()('result: $t');
         this.result = t;
         this.status = Secured;
       case TaskDefect(e):
-        //__.log()('defect: $e');
+        ////__.log()('defect: $e');
         this.defect = [e];
         this.status = Problem;
       case TaskLater(ft) :
-        //__.log()('waiting');
+        ////__.log()('waiting');
         this.status = Waiting;
         ft.handle(
           (_) -> this.trigger.trigger(Noise)

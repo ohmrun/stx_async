@@ -16,29 +16,29 @@ class Handler<T,E> extends Delegate<T,E>{
     }
   }
   override public function pursue(){
-    switch(this.status){
+    switch(this.get_status()){
       case Problem : 
-        handle(__.failure(delegate.defect));
+        handle(__.failure(delegate.get_defect()));
       case Pending :
         this.delegate.pursue();
       case Working : 
       case Waiting : 
-        this.init_signal();
         delegate.signal.handle(
           (_) -> this.trigger.trigger(Noise)
         );
       case Applied : 
         this.delegate.pursue();
-        this.delegate.status  = Secured;
-        this.loaded           = true;
-        handle(__.success(this.result));
+        handle(__.success(this.get_result()));
       case Secured :
-        this.loaded           = true;
-        handle(__.success(this.result));
+        handle(__.success(this.get_result()));
     }
   }
   override public function toString(){
     var id = this.delegate.toString();
     return 'Handler($id)';
+  }
+
+  override public inline function get_status(){
+    return delegate.get_status();
   }
 }

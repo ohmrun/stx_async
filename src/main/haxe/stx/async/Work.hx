@@ -17,6 +17,9 @@ typedef WorkApi = Null<TaskApi<Any,Dynamic>>;
   @:noUsing static public inline function Unit():Work{
     return new stx.async.work.term.Unit().toWork();
   }
+  @:noUsing static public inline function At(delegate:Work,?pos:Pos):Work{
+    return new stx.async.work.term.At(delegate,pos).toWork();
+  }
   @:noUsing static public inline function Canceller(delegate:Work,fn:Void->Void):Work{
     return new stx.async.work.term.Canceller(delegate,fn).toWork();
   }
@@ -39,7 +42,7 @@ typedef WorkApi = Null<TaskApi<Any,Dynamic>>;
  
   public function submit(?loop:Loop){
     loop = __.option(loop).defv(Loop.ZERO);
-    //__.log().debug('submit $this to: $loop');
+    ////__.log().debug('submit $this to: $loop');
     if(this!=null){
       loop.add(this);
     }

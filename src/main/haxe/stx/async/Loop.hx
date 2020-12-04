@@ -3,21 +3,23 @@ package stx.async;
 using stx.async.Loop;
 
 function log(wildcard:Wildcard):stx.Log{
-  return new stx.Log().tag('stx.async.Loop');
+  return stx.async.Log.log(__).tag('stx.async.Loop');
 }
 interface LoopApi{
   private var suspended:Array<Work>;
   private var threads:List<Work>;
 
   public function add(work:Work):Void;
-  public function crack(error:Dynamic):Void;
+
+  public dynamic function fail(error:Dynamic):Void;
+  public dynamic function exit():Void;
 
   public function initialize():Void;
 
   private function ignition(v:HookTag):Void;
 }
 
-class LoopCls implements LoopApi{
+abstract class LoopCls implements LoopApi{
 
   var initialized : Bool;
 
@@ -42,12 +44,15 @@ class LoopCls implements LoopApi{
   var threads   : List<Work>;
 
   public function add(work:Work){
-    ////__.log().debug('add: $work');
+    //__.log().debug('add: $work');
     initialize();
     threads.add(work);
   }
-  public function crack(error:Dynamic){
+  public dynamic function fail(error:Dynamic){
     throw error;
+  }
+  public dynamic function exit(){
+    
   }
   public function reply(){
     //__.log()('$this');
@@ -59,13 +64,14 @@ class LoopCls implements LoopApi{
         try{
           work.pursue();
         }catch(e:Dynamic){
-          on_error(e);
+          fail(e);
           break;
         }
+        
+        var ready     = work.get_loaded();
         //__.log()('$work');
-        var ready     = work.loaded;
         if(!ready){
-          switch(work.status){
+          switch(work.get_status()){
             case Waiting : 
               //__.log().debug('suspend: $work');
               suspended.push(work);
@@ -78,7 +84,7 @@ class LoopCls implements LoopApi{
             case Applied : 
               throw "`Applied` tasks should always only take one `pursue` call to resolve";
             case Problem : 
-              throw work.defect;
+              throw work.get_defect();
             case Secured : 
             case Pending : 
               threads.push(work);
@@ -95,36 +101,25 @@ class LoopCls implements LoopApi{
       false;
     }
   }
-  dynamic function on_error(e:Noise):Void{
-    //__.log().fatal(e);
-    __.crack(e);
-  }
-  #if target.threaded
-  static public function Thread(){
-    return new stx.async.loop.term.Thread();
-  }
-  #else
-  
-  #end
-  static public function Event(){
-    return new stx.async.loop.term.Event();
-  }
-  private function ignition(v:HookTag):Void{
-    __.crack(__.fault().err(FailCode.E_AbstractMethod));
-  }
+  abstract function ignition(v:HookTag):Void;
+
   public function toString(){
-    var name = __.definition(this).identifier().name();
+    var name = __.definition(this).identifier().name;
     return '$name(initialized:$initialized,suspended:$suspended,threads:$threads)';
   }
 }
 
 @:forward abstract Loop(LoopApi) from LoopApi to LoopApi{
 
-  @:nb("Too early to use `stx.Log` inside here as it uses `tink.Signal.defer() -> Timer.delay() -> Thread.current()`.")
   static public var ZERO(default,null):Loop = #if sys Loop.Thread() #else Loop.Event() #end;
   #if target.threaded
   static public function Thread(){
     return new stx.async.loop.term.Thread();
+  }
+  #end
+  #if (sys || hxnodejs)
+  static public function Step(){
+    return new stx.async.loop.term.Step();
   }
   #end
   static public function Event(){

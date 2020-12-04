@@ -1,55 +1,66 @@
 package stx.async.task.term;
 
-class FutureOutcome<T,E> extends TaskCls<T,E>{
-  var pos       : Pos;
-  var delegate  : Future<Outcome<T,Defect<E>>>;
-  var started   : Bool;
-  var finished  : Bool;
+class FutureOutcome<T,E> extends stx.async.task.Delegate<T,E>{
+  var canceller   : CallbackLink;
+  var delegate    : Future<Outcome<T,Defect<E>>>;
+  var response    : Outcome<T,Defect<E>>;
 
-  public function new(delegate,?pos){
-    super();
-    this.pos      = pos;
-    this.delegate = delegate;
-    //Gonna frontrun this because I'm getting odd errors that might be due to adding handler after delivery 05/11/2020
-    //Internal changes in Tink coupled with work on haxe.EventLoop
-    this.delegate.handle(handler);
-    this.started  = false;
-    this.finished = false;
+  var requested   : Bool;
+  var delivered   : Bool;
+
+  @:isVar var id(get,null):Int;
+  override public function get_id(){
+    return this.id;
+  }
+
+  public function new(delegate,?pos:Pos){
+    super(pos);
+    this.delegate     = delegate;
+    this.id           = Counter.next();
+    this.requested    = false;
+    this.delivered    = false;
   }
   private function handler(outcome:Outcome<T,Defect<E>>){
-    init_signal();
-    //__.log().debug(outcome);
-    this.finished = true;
-    outcome.fold(
-      ok -> {
-        this.result = ok;
-        this.status = Secured;
-        this.loaded = true;
-        null;
-      },
-      (no:Array<E>) -> {
-        this.defect = no;
-        this.status = Problem;
-        null;
-      }
-    );
+    ////__.log().debug(outcome);
+    this.response  = outcome;
+    this.delivered = true;
+
     this.trigger.trigger(Noise);
   }
   override public function pursue(){
-    //__.log().debug('pursue: ${status.toString()} $started $finished');
-    if(!started){
-      //__.log().debug("started");
-      this.started = true;
-      this.status  = Working;
-      this.delegate.handle(handler);
-    }else{
-      if(this.status == Working){
-        //__.log().debug('working');
-        this.status = Waiting;
-      }
+    ////__.log().debug('pursue: ${status.toString()} $requested $delivered');
+    if(!requested){
+      ////__.log().debug("requested");
+      this.requested = true;
+      this.canceller = this.delegate.handle(handler);
     }
   }
+  override public function escape(){
+    if(canceller!=null){
+      canceller.cancel();
+    }
+  }
+  override public function update(){
+    
+  }
+  override inline public function get_loaded(){
+    return delivered;
+  }
+  override public function get_status(){
+    return requested ? delivered ? Secured : Waiting : Pending;
+  }
+  override public function get_result(){
+    return __.option(this.response).flat_map(
+      _ -> _.value()
+    ).defv(null);
+  }
+  override public function get_defect(){
+    return __.option(this.response).flat_map(
+      _ -> _.error()
+    ).def(Defect.unit);
+  }
+
   override public function toString(){
-    return 'FutureOutcome:$id($started $finished ${status.toString()}) ${pos.toPosition()}';
+    return Util.toString(this);
   }
 }

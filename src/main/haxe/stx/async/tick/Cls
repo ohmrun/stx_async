@@ -1,0 +1,8 @@
+package stx.async.tick;
+
+class Cls extends Abs{
+  override public function pursue():Void{}
+  override public function escape():Void{}
+  
+  override public function update():Void{}
+}

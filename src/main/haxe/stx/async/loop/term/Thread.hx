@@ -3,7 +3,7 @@ package stx.async.loop.term;
 using stx.async.loop.term.Thread;
 
 function log(wildcard:Wildcard){
-  return new stx.Log().tag("stx.async.loop.term.Thread");
+  return stx.async.Log.log(__).tag(__.here().toPosition().identifier());
 }
 typedef ThreadMapDef = Array<Couple<String,stx.async.Thread>>;
 abstract ThreadMap(ThreadMapDef) from ThreadMapDef to ThreadMapDef{
@@ -37,7 +37,7 @@ class Thread extends LoopCls{
   var was_suspended : Bool;
 
   public function new(){
-    //__.log().info('new Thread Runner');
+    //__.log().info('THREAD LOOP');
     this.thread         = null;
     this.ignitioned     = false;
     this.was_suspended  = false;
@@ -45,7 +45,7 @@ class Thread extends LoopCls{
     super();
   }
   override public function add(work:Work){
-    //__.log()('add work: $work from to ${__.option(Runtime.ZERO.current()).map( _ -> _.id)} to ${__.option(thread).map( _ -> _.id)}');
+    ////__.log()('add work: $work from to ${__.option(Runtime.ZERO.current()).map( _ -> _.id)} to ${__.option(thread).map( _ -> _.id)}');
     super.add(work);
   }
   override public function reply(){
@@ -61,6 +61,7 @@ class Thread extends LoopCls{
           () -> {
             if(!reply()){
               loop.cancel(event_handler);
+              exit();
             }
           }  
         ,0);
@@ -68,7 +69,7 @@ class Thread extends LoopCls{
   override public function ignition(v:HookTag){
     if(!ignitioned){
       ignitioned = true;
-      //__.log().info('thread: ignition');
+      ////__.log().info('thread: ignition');
       Runtime.ZERO.createWithEventLoop(rec);
     }
   }

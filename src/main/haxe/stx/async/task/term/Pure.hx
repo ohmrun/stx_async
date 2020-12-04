@@ -1,14 +1,15 @@
 package stx.async.task.term;
 
-class Pure<T,E> extends TaskCls<T,E>{
-  public function new(result){
-    super();
-    __.assert().exists(result);
-    this.loaded = true;
-    this.result = result;
-    this.status = Secured;
+class Pure<T,E> extends Stamp<T,E>{
+
+  public function new(result,?pos:Pos){
+    super(__.success(result),pos);
   }
-  override public function toString(){
-    return 'Pure(${status.toString()})';
+  override public function get_status(){
+    return Secured;
   }
+  override public function get_loaded(){
+    return true;
+  }
+  override public function pursue(){}
 }

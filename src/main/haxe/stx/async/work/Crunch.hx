@@ -13,20 +13,21 @@ class Crunch{
     var backoff   = 0.2;
     //__.log().debug('$self');
     while(true == cont){
-      //__.log().debug('crunch: suspended? $suspended');
-      if(self.defect.is_defined()){
-        loop.crack(self.defect);
+      //__.log().debug('suspended? $suspended');
+      if(self.get_defect().is_defined()){
+        loop.fail(self.get_defect());
         cont = false;
       }
       if(!suspended){
         self.pursue();
-        if(self.loaded){
+        //__.log()(self);
+        if(self.get_loaded()){
           //__.log().debug("done");
           cont = false;
         }else{
           //__.log().debug('${self}');
-          //__.log().debug('status: ${self.status.toString()}');
-          switch(self.status){
+          //__.log().debug('status: ${self.get_status().toString()}');
+          switch(self.get_status()){
             case Waiting : 
               suspended = true;
               self.signal.nextTime().handle(
@@ -36,8 +37,7 @@ class Crunch{
                 }
               );
             case Problem :
-              
-              loop.crack(self.defect);
+              loop.fail(self.get_defect());
             case Pending | Working : 
             case Secured | Applied : cont = false;
           }

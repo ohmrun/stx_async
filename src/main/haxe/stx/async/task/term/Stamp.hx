@@ -1,19 +1,22 @@
 package stx.async.task.term;
 
-class Stamp<T,E> extends TaskCls<T,E>{
+class Stamp<T,E> extends stx.async.task.Delegate<T,E>{
+  @:isVar var id(get,null):Int;
+  override public function get_id(){
+    return this.id;
+  }
   var delegate : Outcome<T,Defect<E>>;
-  public inline function new(outcome:Outcome<T,Defect<E>>){
-    super();
-    this.loaded   = true;
+  public inline function new(outcome:Outcome<T,Defect<E>>,?pos:Pos){
+    super(pos);
+    this.id       = Counter.next();
     this.delegate = outcome;
-    this.status   = Secured;
   }
   override public function get_defect(){
     return delegate.fold(
-      (_) -> null,
+      (_) -> [],
       (e) -> e
     );
-  }
+  }  
   override public function get_result(){
     return delegate.fold(
       (r) -> r,
@@ -23,4 +26,16 @@ class Stamp<T,E> extends TaskCls<T,E>{
   override public function toString(){
     return 'Stamp($delegate)';
   }
+  
+  override public function get_loaded(){
+    return true;
+  }
+  override public function get_status(){
+    return Secured;
+  }
+  
+  override public function pursue(){}
+  override public function escape(){}
+  override public function update(){}
+
 }
