@@ -1,6 +1,6 @@
 package stx.async.terminal.term;
 
-class Sub<R,E> extends Cls<R,E>{
+class Handler<R,E> extends Cls<R,E>{
   var handler : Outcome<R,Defect<E>> -> Void;
   public function new(handler,?pos:Pos){
     super(pos);

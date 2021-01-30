@@ -8,10 +8,10 @@ class Thunk<T,E> extends stx.async.task.Direct<T,E>{
     this.delegate   = delegate;
     this.completed  = false;
   }
-  override inline public function pursue(){
+  inline public function pursue(){
     this.completed  = true;
     this.result     = delegate();
-    this.status     = Secured;
+    this.set_status(Secured);
   }
   override public function get_loaded(){
     return completed;

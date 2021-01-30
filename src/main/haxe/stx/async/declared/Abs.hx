@@ -8,7 +8,6 @@ abstract class Abs implements Api extends Clazz{
   public function new(?pos:Pos){
     super();
     this.pos = pos;  
-    //this.id  = Counter.next();
   }
   public function equals(that:DeclaredApi){
     return this.get_id() == that.get_id();

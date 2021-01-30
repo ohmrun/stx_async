@@ -9,25 +9,25 @@ class Par<T,Ti,E> extends stx.async.task.Direct<Couple<T,Ti>,E>{
     this.lhs = lhs;
     this.rhs = rhs;
   }
-  override public function pursue(){
+  public function pursue(){
     if(!defect.is_defined() && !get_loaded()){
       this.lhs.pursue();
       this.rhs.pursue();
       switch([this.lhs.get_status(),this.rhs.get_status()]){
         case [Applied,Applied] : 
-          this.status = Secured;
+          this.set_status(Secured);
           this.result = __.couple(lhs.get_result(),rhs.get_result());
         case [Problem,_] :
           this.defect = lhs.get_defect();
-          this.status = Problem;
+          this.set_status(Problem);
         case [_,Problem] :  
           this.defect = rhs.get_defect();
-          this.status = Problem;
+          this.set_status(Problem);
         case [Secured,Secured] : 
-          this.status = Secured;
+          this.set_status(Secured);
           this.result = __.couple(lhs.get_result(),rhs.get_result());
         case [Waiting,Waiting] : 
-          this.status = Waiting;
+          this.set_status(Waiting);
           lhs.signal.nextTime().merge(
             rhs.signal.nextTime(),
             (_,_) -> Noise
@@ -35,12 +35,12 @@ class Par<T,Ti,E> extends stx.async.task.Direct<Couple<T,Ti>,E>{
             (_) -> this.trigger.trigger(Noise)
           );
         case [Waiting,_] : 
-          this.status = Waiting;
+          this.set_status(Waiting);
           lhs.signal.nextTime().handle(
             (_) -> this.trigger.trigger(Noise)
           );
         case [_,Waiting] : 
-          this.status = Waiting;
+          this.set_status(Waiting);
           rhs.signal.nextTime().handle(
             (_) -> this.trigger.trigger(Noise)
           );

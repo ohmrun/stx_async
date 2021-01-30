@@ -7,28 +7,28 @@ abstract class Filter<R,Ri,E> extends Delegation<Ri,Task<R,E>,E>{
   }
   abstract function filter(r:R):Ri;
 
-  override public inline function pursue(){
+  public inline function pursue(){
     this.delegation.pursue();
   }
-  override public inline function escape(){
+  public inline function escape(){
     this.delegation.escape();
   }
-  override public inline function update(){
+  public inline function update(){
     this.delegation.update();
   }
-  override public function get_loaded():Bool{
+  public function get_loaded():Bool{
     return this.delegation.get_loaded();
   }
-  override public function get_status():GoalStatus{
+  public function get_status():GoalStatus{
     return this.delegation.get_status();
   }
-  override public function get_result(){
+  public function get_result(){
     return filter(this.delegation.get_result());
   }
-  override public function get_defect(){
+  public function get_defect(){
     return this.delegation.get_defect();
   }
-  override public function get_id(){
+  public function get_id(){
     return this.delegation.get_id();
   }
   override public function toString(){

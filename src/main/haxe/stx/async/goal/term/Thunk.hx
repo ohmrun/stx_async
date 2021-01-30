@@ -7,16 +7,16 @@ class Thunk extends Direct{
     super(pos);
     this.thunk = thunk;
   }
-  override public function pursue(){
-    this.status = thunk();
+  public function pursue(){
+    this.set_status(thunk());
   }
-  override public function update(){
+  public function update(){
 
   }
-  override public function escape(){
+  public function escape(){
 
   }
-  override public function toString(){
+  public function toString(){
     return 'goal.Thunk[$id ${get_status().toString()}]';
   }
 }

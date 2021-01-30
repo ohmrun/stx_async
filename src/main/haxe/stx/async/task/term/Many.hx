@@ -15,7 +15,7 @@ class Many<T,E> extends Direct<Array<T>,E>{
   override public function get_loaded():Bool{
     return this.loaded;
   }
-  override public function pursue(){
+  public function pursue(){
     if(!get_loaded()){
       if(cursor == tasks.length && get_status() != Problem){
         this.loaded = true;

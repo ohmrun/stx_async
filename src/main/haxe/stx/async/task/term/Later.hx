@@ -10,7 +10,7 @@ class Later<T,E> extends stx.async.task.Direct<T,E>{
     this.delegate = delegate;
     this.started  = false;
   }
-  override public inline function pursue(){
+  public inline function pursue(){
     //////__.log().debug('pursue: loaded: $loaded defect $defect');
     if(!this.get_loaded() && !defect.is_defined()){
       //////__.log().debug('pursue');
@@ -39,7 +39,7 @@ class Later<T,E> extends stx.async.task.Direct<T,E>{
         if(this.further.get_status() == Pending){
           this.further.pursue();
         }
-        this.status = this.further.get_status();
+        this.set_status(this.further.get_status());
       }
     }
   }

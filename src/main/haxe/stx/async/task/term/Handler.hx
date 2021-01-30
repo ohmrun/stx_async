@@ -38,7 +38,7 @@ class Handler<T,E> extends Delegate<T,E>{
     return 'Handler($id)';
   }
 
-  override public inline function get_status(){
+  public inline function get_status(){
     return delegate.get_status();
   }
 }

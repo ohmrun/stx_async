@@ -16,12 +16,10 @@ class Joint<R,E> extends Cls<R,E>{
   //   return new stx.async.terminal.Task(term,joining,pos);
   // }
   @:access(stx.async) override private inline function resolve(receiver:Receiver<R,E>,?pos:Pos):Receiver<R,E>{
-    //__.log().debug('resolve $receiver on $this');
-    return (
-      Receiver.lift(
-        new stx.async.terminal.Task(receiver.prj(),joining,pos)
-      )
-    );
+    __.log().debug('resolve $receiver on $this');
+    return super.resolve(Receiver.lift(
+      new stx.async.terminal.Task(receiver.prj(),joining,pos)
+    ));
   } 
   /**
     Could be called mmultiple ways and times depending on how the join is constructed.
@@ -39,10 +37,10 @@ class Joint<R,E> extends Cls<R,E>{
     }
   }
   override public function get_status(){
-    return called ? this.status : Pending;
+    __.log().trace((ctr) -> ctr.self(this, (x) -> '${x.id} ${x.called} status:${x.__status.toString()}'));
+    return called ? super.get_status() : Pending;
   }
   override public function pursue(){
-    //__.log()(this);
     super.pursue();
   }
 }

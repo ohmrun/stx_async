@@ -8,7 +8,7 @@ function log(wildcard:Wildcard){
   return stx.async.Log.log(__).tag(__.here().lift().identifier());
 }
 @:forward abstract Terminal<R,E>(Api<R,E>) from Api<R,E> to Api<R,E>{
-  static private var ZERO = new Terminal();
+  //static private var ZERO = new Terminal();
   static public inline function lift<R,E>(self:Api<R,E>,?pos:Pos):Terminal<R,E>{
     return new Terminal(self,pos);
   }

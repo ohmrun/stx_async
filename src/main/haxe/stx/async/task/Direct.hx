@@ -17,13 +17,13 @@ abstract class Direct<T,E> implements TaskApi<T,E> extends stx.async.goal.term.D
   public function set_result(v:Null<T>):Null<T>{
     return this.result = v;
   }
-  override public function escape():Void{
+  public function escape():Void{
   
   }
-  override public function update():Void{
+  public function update():Void{
     
   }
-  override public function toGoalApi():GoalApi{
+  public override function toGoalApi():GoalApi{
     return this;
   }
   public function toWork(?pos:Pos):Work{
@@ -32,7 +32,7 @@ abstract class Direct<T,E> implements TaskApi<T,E> extends stx.async.goal.term.D
   public function toTaskApi():TaskApi<T,E>{
     return this;
   }
-  override public function toString(){
+  public function toString(){
     return Util.toString(this);
   } 
 }

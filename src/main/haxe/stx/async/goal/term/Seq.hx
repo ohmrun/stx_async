@@ -3,12 +3,12 @@ package stx.async.goal.term;
 class Seq extends Delegate{
 
   @:isVar var id(get,null):Int;
-  override public function get_id(){
+  public function get_id(){
     return this.id;
   }
 
-  override public function get_loaded(){
-    return this.status == Secured;
+  public function get_loaded(){
+    return this.lhs.get_loaded() && this.rhs.get_loaded();
   }
   
   @:isVar public var status(get,set):GoalStatus;
@@ -16,7 +16,7 @@ class Seq extends Delegate{
   public function set_status(v){
     return this.status = v;
   }
-  override public function get_status(){
+  public function get_status(){
     return this.status;
   }
   
@@ -34,13 +34,13 @@ class Seq extends Delegate{
     this.sel      = false;
   }
   //defect.is_defined() && 
-  override public function pursue(){
+  public function pursue(){
     ////__.log()('pursue $this');
-    //trace('$sel ${get_loaded()} ${lhs.get_loaded()} ${rhs.get_loaded()}');
+    __.log().debug('$sel ${get_loaded()} ${lhs.get_loaded()} ${rhs.get_loaded()}');
     if(!get_loaded()){
       switch(this.sel){
         case false : 
-          //__.log().debug('$lhs');
+          __.log().debug('$lhs');
           switch(lhs.get_status()){
             case Problem :
             case Pending : 
@@ -68,7 +68,7 @@ class Seq extends Delegate{
               pursue();
           }
         case true : 
-          //__.log().debug('rhs ${get_id()}:${rhs.get_status().toString()} $rhs');
+          __.log().debug('rhs ${get_id()}:${rhs.get_status().toString()} $rhs');
           switch(rhs.get_status()){
             case Problem :
             case Pending : 
@@ -98,15 +98,15 @@ class Seq extends Delegate{
       } 
     }
   }
-  override public function escape(){
+  public function escape(){
     this.lhs.escape();
     this.rhs.escape();
   }
-  override public function update(){
+  public function update(){
     this.lhs.update();
     this.rhs.update();
   }
-  override public function toString(){
+  public function toString(){
     return 'goal.Seq[${get_id()} sel: $sel loaded:${get_loaded()}]($lhs $rhs)';
   }
 } 

@@ -1,11 +1,7 @@
 package stx.async.terminal;
 
 class Task<T,E> extends stx.async.goal.term.Seq implements stx.async.task.Api<T,E>{
-  override public function get_status(){
-    var result = super.get_status();
-    ////__.log()(result.toString());
-    return result;
-  }
+
   var delegate                    : stx.async.Task<T,E>;
   var deferred                    : stx.async.goal.term.DeferredDelegated;
   @:isVar var work(get,set)       : Work;
@@ -37,7 +33,7 @@ class Task<T,E> extends stx.async.goal.term.Seq implements stx.async.task.Api<T,
         return joiner(__.failure(no));
       }
     );
-    //__.log()('JOINED: $work');
+    __.log()('JOINED: $work TO $this');
   }
   override inline public function pursue(){
     //__.log()('terminal.Task.pursue() $this');
@@ -70,6 +66,10 @@ class Task<T,E> extends stx.async.goal.term.Seq implements stx.async.task.Api<T,
           ////__.log()(this.work);
       }
     }
+  }
+  //Gotta run this once at least
+  override public function get_status(){
+    return this.work == null ? Pending : super.get_status();
   }
   public function get_defect():Defect<E>{
     var that = __.option(this.work).map(_ -> _.get_defect()).def(Defect.unit);

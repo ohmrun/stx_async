@@ -4,11 +4,14 @@ import stx.async.task.term.*;
 
 @:using(stx.async.Task.TaskLift)
 @:forward abstract Task<T,E>(TaskApi<T,E>) from TaskApi<T,E> to TaskApi<T,E>{
+  static public var ZERO(default,null) : Task<Dynamic,Dynamic> = Unit();
   static public var counter : Int = 0;
   static public var _(default,never) = TaskLift;
   static public inline function lift<T,E>(self:TaskApi<T,E>) return new Task(self);
   public inline function new(self) this = self;
-
+  @:noUsing static public function Unit<T,E>():Task<T,E>{
+    return new stx.async.task.term.Unit();
+  }
   @:noUsing static public function AnonFlatMap<T,Ti,E>(self:Task<T,E>,flat_map:T->Task<Ti,E>,?pos:Pos):Task<Ti,E>{
     return new AnonFlatMap(self,flat_map,pos);
   }

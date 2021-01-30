@@ -5,7 +5,7 @@ abstract class Delegate<T,E> implements TaskApi<T,E> extends stx.async.goal.term
   abstract public function get_defect():Defect<E>;
   abstract public function get_result():Null<T>;
 
-  override public function toString(){
+  public function toString(){
     return Util.toString(this);
   }
 

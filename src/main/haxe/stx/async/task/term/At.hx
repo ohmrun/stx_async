@@ -5,7 +5,10 @@ class At<R,E> extends Delegate<R,E>{
     super(delegate);
     this.pos = pos;
   }
-  override public inline function get_status(){
+  public inline function get_status(){
     return delegate.get_status();
+  }
+  override public inline function get_id(){
+    return delegate.get_id();
   }
 }

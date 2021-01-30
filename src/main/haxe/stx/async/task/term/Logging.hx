@@ -1,5 +1,4 @@
 package stx.async.task.term;
-
 class Logging<R,E> extends stx.async.task.term.Delegate<R,E>{
   public var logging(default,null):stx.Log;
   public var showing(default,null):Task<R,E> -> String;
@@ -19,7 +18,7 @@ class Logging<R,E> extends stx.async.task.term.Delegate<R,E>{
   override public function toString(){
     return return 'Logging(${this.delegate})';
   }
-  override public inline function get_status(){
+  public inline function get_status(){
     return delegate.get_status();
   }
 }

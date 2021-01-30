@@ -5,8 +5,8 @@ class CrunchTest extends utest.Test{
     var orders = [TaskPursue,TaskResult("hello")];
     var tasks  = new ChompyTask(orders);
         tasks.pursue();
-        equals(Pending,tasks.status);
+        equals(Pending,tasks.get_status());
         tasks.pursue();
-        equals(Secured,tasks.status);
+        equals(Secured,tasks.get_status());
   }
 }

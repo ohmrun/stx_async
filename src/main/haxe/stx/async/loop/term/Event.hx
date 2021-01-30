@@ -22,7 +22,7 @@ class Event extends LoopCls{
       exit();
     }
   }
-  override private function ignition(v:HookTag){
+  private function ignition(v:HookTag){
     if(tick == null){
       tick = MainLoop.add(rec);
     }

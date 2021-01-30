@@ -1,4 +1,4 @@
-package stx.async.terminal;
+package stx.async;
 
 abstract Receiver<R,E>(TaskApi<R,E>){
   static inline public function lift<R,E>(self:TaskApi<R,E>) return new Receiver(self);

@@ -18,7 +18,7 @@ class Map<Ri,Rii,E> extends stx.async.task.Direct<Rii,E>{
   override public function get_status():GoalStatus{
     return this.delegate.get_status();
   }
-  override public function pursue(){
+  public function pursue(){
     this.delegate.pursue();
   }
   override public function escape(){

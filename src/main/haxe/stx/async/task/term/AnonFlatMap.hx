@@ -8,7 +8,7 @@ class AnonFlatMap<T,Ti,E> extends FlatMap<T,Ti,E>{
   public dynamic function __flat_map(t:T):TaskApi<Ti,E>{
     return throw 'Constructor not called';
   }
-  override public inline function flat_map(t:T):TaskApi<Ti,E>{
+  public inline function flat_map(t:T):TaskApi<Ti,E>{
     return __flat_map(t);
   }
 }

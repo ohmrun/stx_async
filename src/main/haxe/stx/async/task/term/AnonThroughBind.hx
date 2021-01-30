@@ -9,7 +9,7 @@ class AnonThroughBind<T,Ti,E> extends ThroughBind<T,Ti,E>{
     return new Fail([]);
   }
 
-  override inline function through_bind(outcome:Outcome<T,Defect<E>>):TaskApi<Ti,E>{
+  inline function through_bind(outcome:Outcome<T,Defect<E>>):TaskApi<Ti,E>{
     return __through_bind(outcome);
   }
 }

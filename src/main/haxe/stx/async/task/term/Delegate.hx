@@ -18,32 +18,32 @@ abstract class Delegate<R,E> extends stx.async.task.Delegate<R,E>{
     );
     return super.get_signal();
   }
-  override public function get_defect():Defect<E>{
+  public function get_defect():Defect<E>{
     return this.delegate.get_defect();
   }
-  override public function get_result():Null<R>{
+  public function get_result():Null<R>{
     return this.delegate.get_result();
   }
   abstract public function get_status():GoalStatus;
 
-  override public function pursue(){
+  public function pursue(){
     if(!get_loaded()){
       this.delegate.pursue();
     }
   }
-  override public function escape(){
+  public function escape(){
     this.delegate.escape();
   }
-  override public function update(){
+  public function update(){
     this.delegate.update();
   }
-  override public function get_loaded(){
+  public function get_loaded(){
     return this.delegate.get_loaded();
   }
   override public function toString(){
     return Util.toString(this);
   }
-  override public function get_id(){
+  public function get_id(){
     return this.delegate.get_id();
   }
 }

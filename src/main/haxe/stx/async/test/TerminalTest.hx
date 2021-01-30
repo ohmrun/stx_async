@@ -4,7 +4,7 @@ typedef Arw<T,Ti> = T -> Terminal<Ti,Noise> -> Work;
 
 class TerminalTest extends utest.Test{
   private static function get_terminal<R,E>():Terminal<R,E>{
-    return @:privateAccess Terminal.ZERO;
+    return @:privateAccess new Terminal();
   }
   public function _test_shim(){
     var term    = get_terminal();
@@ -107,7 +107,8 @@ class TerminalTest extends utest.Test{
     );
     var n = t.joint(
           (oc) -> {
-            same(__.success(1),oc);
+            same(__.success(60),oc);
+            trace("here");
             __.log().debug('SECOND: $oc');
             return t.value(100).serve();
           }
@@ -150,7 +151,7 @@ class TerminalTest extends utest.Test{
     var b         = terminal.inner(
       (oc) -> {
         ////__.log()('trigger: $oc');
-        f.trigger(__.log().close().through()(oc.map(i -> ++i)));
+        //f.trigger(__.log().close().through()((ctr:EntryCtr<Dynamic>) -> ctr.pure(oc.map(i -> ++i))));
       }
     );
     var next      = a.after(b.value(1).serve()); 

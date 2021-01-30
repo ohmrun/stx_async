@@ -9,7 +9,7 @@ class Delegate<R,E> implements Api<R,E> extends stx.async.task.term.Delegate<R,E
     this.term = term;
   }
   private function resolve(receiver:Receiver<R,E>,?pos:Pos):Receiver<R,E>{
-    return term.resolve(receiver,pos);
+    return @:privateAccess term.resolve(receiver,pos);
   }
   public function issue(res:Outcome<R,Defect<E>>,?pos:Pos):Receiver<R,E>{
     return term.issue(res,pos);
@@ -45,7 +45,7 @@ class Delegate<R,E> implements Api<R,E> extends stx.async.task.term.Delegate<R,E
   public function toTask():Task<R,E>{
     return Task.lift(this);
   }
-  override public inline function get_status(){
+  public inline function get_status(){
     return term.toWork().get_status();
   }
 }

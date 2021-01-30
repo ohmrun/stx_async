@@ -11,6 +11,8 @@ import stx.async.test.*;
 import stx.async.test.type.*;
 import stx.async.test.type.TaskResultType;
 
+
+
 class Test{
   static public function main(){
     stx.Test.test(
@@ -19,6 +21,7 @@ class Test{
         new CrunchTest(),
         new TaskClsTest(),
         new TerminalTest(),
+        //new NewTerminalTest(),
         new LaterTest(),
         //new StepTest(),
         #if target.threaded
@@ -52,7 +55,7 @@ class GoalSeqTest extends utest.Test{
     same(Secured,@:privateAccess goal_seq.lhs.get_status());
     goal_seq.pursue();
     same(true,@:privateAccess goal_seq.sel);
-    //__.log()(goal_seq.get_status());
+    //__.`()(goal_seq.get_status());
     same(Secured,goal_seq.get_status());
   }
 }
@@ -70,3 +73,4 @@ class StepTest extends utest.Test{
     );
   }
 }
+

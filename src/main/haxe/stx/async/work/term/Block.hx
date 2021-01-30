@@ -8,7 +8,7 @@ class Block extends stx.async.task.Direct<Noise,Noise>{
     super();
     this.deferred = deferred;
   }
-  override inline public function pursue(){
+  inline public function pursue(){
     this.deferred();
     this.result = Noise;
     this.done   = true;

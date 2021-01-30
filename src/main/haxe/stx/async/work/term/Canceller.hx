@@ -10,7 +10,7 @@ class Canceller extends stx.async.task.term.Delegate<Any,Dynamic>{
     this.delegate.escape();
     this.canceller();
   }
-  override public inline function get_status(){
+  public inline function get_status(){
     return delegate.get_status();
   }
 }

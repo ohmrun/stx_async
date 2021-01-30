@@ -4,7 +4,7 @@ class Fail<T,E> extends stx.async.task.Direct<T,E>{
   public function new(defect:Array<E>,?pos:Pos){
     super(pos);
     this.defect = defect;
-    this.status = Problem;
+    this.set_status(Problem);
   }
-  override public function pursue(){}
+  public function pursue(){}
 }

@@ -9,7 +9,7 @@ class FutureOutcome<T,E> extends stx.async.task.Delegate<T,E>{
   var delivered   : Bool;
 
   @:isVar var id(get,null):Int;
-  override public function get_id(){
+  public function get_id(){
     return this.id;
   }
 
@@ -27,7 +27,7 @@ class FutureOutcome<T,E> extends stx.async.task.Delegate<T,E>{
 
     this.trigger.trigger(Noise);
   }
-  override public function pursue(){
+  public function pursue(){
     //////__.log().debug('pursue: ${status.toString()} $requested $delivered');
     if(!requested){
       //////__.log().debug("requested");
@@ -35,26 +35,26 @@ class FutureOutcome<T,E> extends stx.async.task.Delegate<T,E>{
       this.canceller = this.delegate.handle(handler);
     }
   }
-  override public function escape(){
+  public function escape(){
     if(canceller!=null){
       canceller.cancel();
     }
   }
-  override public function update(){
+  public function update(){
     
   }
-  override inline public function get_loaded(){
+  inline public function get_loaded(){
     return delivered;
   }
-  override public function get_status(){
+  public function get_status(){
     return requested ? delivered ? Secured : Waiting : Pending;
   }
-  override public function get_result(){
+  public function get_result(){
     return __.option(this.response).flat_map(
       _ -> _.value()
     ).defv(null);
   }
-  override public function get_defect(){
+  public function get_defect(){
     return __.option(this.response).flat_map(
       _ -> _.error()
     ).def(Defect.unit);

@@ -66,7 +66,7 @@ class Thread extends LoopCls{
           }  
         ,0);
   }
-  override public function ignition(v:HookTag){
+  public function ignition(v:HookTag){
     if(!ignitioned){
       ignitioned = true;
       //////__.log().info('thread: ignition');

@@ -32,7 +32,7 @@ class Cls<R,E> implements Api<R,E> extends stx.async.goal.term.Direct{
     return resolve(Receiver.lift(Task.FutureOutcome(ft,pos)),pos);
   }                    
   public inline function lense(t:Task<R,E>,?pos:Pos):Receiver<R,E>{
-    return resolve(Receiver.lift(Task.At(t,pos)),pos);
+    return resolve(Receiver.lift(t),pos);
   }                     
   //abstract
   //resolve                   
@@ -49,7 +49,7 @@ class Cls<R,E> implements Api<R,E> extends stx.async.goal.term.Direct{
     return release(new stx.async.terminal.term.Pause(work,pos),pos);
   }                                
   public function inner<RR,EE>(join:Outcome<RR,Array<EE>> -> Void,?pos:Pos):Terminal<RR,EE>{
-    return release(new Sub(join,pos),pos);
+    return release(new Handler(join,pos),pos);
   } 
   public function joint<RR,EE>(joiner:Outcome<RR,Defect<EE>> -> Work,?pos:Pos):Terminal<RR,EE>{
     return release(new Joint(joiner,pos),pos);
@@ -58,12 +58,12 @@ class Cls<R,E> implements Api<R,E> extends stx.async.goal.term.Direct{
   public inline function toTerminalApi():Api<R,E> return this;
   public inline function toTask():Task<R,E> return Task.lift(new stx.async.work.term.Goal(this.toGoalApi()));
 
-  override public function toString(){ 
+  public function toString(){ 
     return '${this.identifier().name}:$id[${get_status()}]${ident()} [dependent: $dependent]'; 
   }
 
   public function ident(){
-    return '';//'(${pos.lift().toString_name_method_line()})';
+    return '(${pos.lift()})';
   }
 
   public function get_result():Null<R>{
@@ -72,15 +72,20 @@ class Cls<R,E> implements Api<R,E> extends stx.async.goal.term.Direct{
   public function get_defect():Defect<E>{
     return dependent.get_defect().entype();
   } 
-  override public function pursue(){
-    //__.log()('terminal.Cls.pursue ${dependent.get_status().toString()}');
+  public function pursue(){
+    __.log()('terminal.Cls.pursue ${dependent.get_status().toString()}');
     this.dependent.pursue();
-    this.set_status(dependent.get_status());
+    var dep_status = dependent.get_status();
+    __.log()('$id dep_status:$dep_status');
+    this.set_status(dep_status);
+    var this_status = this.get_status();
+    __.log()('$id this_status:$this_status');
+    __.log()('${this.get_status()} ${dependent.get_status()}');
   }
-  override public function escape(){
+  public function escape(){
     this.dependent.escape();
   } 
-  override public function update(){
+  public function update(){
     this.dependent.update();
   }
   override public function get_signal(){

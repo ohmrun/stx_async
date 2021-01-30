@@ -13,7 +13,7 @@ abstract class ThroughBind<T,Ti,E> extends stx.async.task.Direct<Ti,E>{
   }
   abstract function through_bind(outcome:Outcome<T,Defect<E>>):TaskApi<Ti,E>;
 
-  override public inline function pursue(){
+  public inline function pursue(){
     //////__.log()('loaded? $loaded $defect? $defect');
     if(!defect.is_defined() && !get_loaded()){
       if(further == null){
@@ -22,24 +22,23 @@ abstract class ThroughBind<T,Ti,E> extends stx.async.task.Direct<Ti,E>{
           case Applied : 
             delegate.pursue();
             this.further = through_bind(delegate.get_defect().is_defined().if_else(() -> __.failure(delegate.get_defect()),() -> __.success(delegate.get_result())));
-            this.status  = Pending;
+            this.set_status(Pending);
           case Secured : 
             this.further = through_bind(delegate.get_defect().is_defined().if_else(() -> __.failure(delegate.get_defect()),() -> __.success(delegate.get_result())));
-            this.status  = Pending;
+            this.set_status(Pending);
           case Problem : 
-            
-            this.status = Problem;
+            this.set_status(Problem);
           case Waiting : 
             #if debug
             __.assert().exists(this.delegate.signal);
             #end
-            this.status = Waiting;
+            this.set_status(Waiting);
             this.delegate.signal.nextTime().handle(
               (_) -> this.trigger.trigger(Noise)
             );
           case Pending : 
             delegate.pursue();
-            this.status = delegate.get_status();
+            this.set_status(delegate.get_status());
           default :
         }
       }else{
@@ -47,14 +46,14 @@ abstract class ThroughBind<T,Ti,E> extends stx.async.task.Direct<Ti,E>{
           switch(further.get_status()){
             case Applied :
               further.pursue();
-              this.status = Secured;
+              this.set_status(Secured);
             case Secured : 
-              this.status = Secured;
+              this.set_status(Secured);
             case Problem : 
-              this.status = Problem;
+              this.set_status(Problem);
             case Waiting : 
               __.assert().exists(this.further.signal);
-              this.status = Waiting;
+              this.set_status(Waiting);
               this.further.signal.nextTime().handle(
                 (_) -> this.trigger.trigger(Noise)
               );
@@ -62,7 +61,7 @@ abstract class ThroughBind<T,Ti,E> extends stx.async.task.Direct<Ti,E>{
             case Working : 
           }
         }else{
-          this.status = Secured;
+          this.set_status(Secured);
         }
       }
     }

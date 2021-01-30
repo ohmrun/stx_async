@@ -5,7 +5,7 @@ class Stamp extends stx.async.task.Direct<Any,Dynamic>{
   public inline function new(outcome:Outcome<Any,Defect<Dynamic>>){
     super();
     this.delegate = outcome;
-    this.status   = Secured;
+    this.set_status(Secured);
   }
   override public function get_defect(){
     return delegate.fold(
@@ -22,5 +22,5 @@ class Stamp extends stx.async.task.Direct<Any,Dynamic>{
   override public function get_loaded(){
     return true;
   }
-  override public function pursue(){}
+  public function pursue(){}
 }  

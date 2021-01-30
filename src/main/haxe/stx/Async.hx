@@ -1,6 +1,11 @@
 package stx;
 class Async{
   static public function timer(wildcard:Wildcard) return new Timer();
+  static public function bubble(self:stx.async.transmit.Api,insider:stx.async.transmit.Api){
+    insider.signal.nextTime().handle(
+      (_) -> @:privateAccess self.trigger.trigger(_)
+    );
+  }
 }
 
 typedef TaskDef<R,E>  = stx.async.task.Def<R,E>;
@@ -9,19 +14,21 @@ typedef TaskApi<R,E>  = stx.async.task.Api<R,E>;
 
 typedef DeclaredApi   = stx.async.declared.Api;
 
-typedef Task<R,E>     = stx.async.Task<R,E>;
-typedef WorkApi       = stx.async.Work.WorkApi;
-typedef Work          = stx.async.Work;
-typedef Terminal<R,E> = stx.async.Terminal<R,E>;
-typedef TimerDef      = stx.async.Timer.TimerDef;
-typedef Timer         = stx.async.Timer;
-typedef GoalStatus    = stx.async.GoalStatus;
-typedef LoopCls       = stx.async.Loop.LoopCls;
-typedef Loop          = stx.async.Loop;
-typedef Hook          = stx.async.Hook;
-typedef HookTag       = stx.async.Hook.HookTag;
-typedef LogicalClock  = stx.async.LogicalClock;
-typedef TimeStamp     = stx.async.TimeStamp;
+typedef Task<R,E>           = stx.async.Task<R,E>;
+typedef WorkApi             = stx.async.Work.WorkApi;
+typedef Work                = stx.async.Work;
+typedef Terminal<R,E>       = stx.async.Terminal<R,E>;
+typedef TimerDef            = stx.async.Timer.TimerDef;
+typedef Timer               = stx.async.Timer;
+typedef GoalStatus          = stx.async.GoalStatus;
+typedef LoopCls             = stx.async.Loop.LoopCls;
+typedef Loop                = stx.async.Loop;
+typedef Hook                = stx.async.Hook;
+typedef HookTag             = stx.async.Hook.HookTag;
+typedef LogicalClock        = stx.async.LogicalClock;
+typedef TimeStamp           = stx.async.TimeStamp;
+//typedef ResolverApi<R,E>    = stx.async.terminal.NewTerminal.ResolverApi<R,E>;
+//typedef Resolver<R,E>       = stx.async.terminal.NewTerminal.Resolver<R,E>;
 
 @:forward abstract Goal(GoalApi) from GoalApi to GoalApi{
   @:noUsing static public function lift(self) return new Goal(self);
@@ -29,6 +36,9 @@ typedef TimeStamp     = stx.async.TimeStamp;
 
   @:noUsing static public function Seq(lhs,rhs,?pos:Pos){
     return new stx.async.goal.term.Seq(lhs,rhs,pos);
+  }
+  @:noUsing static public function Par(array:Array<Goal>,?pos:Pos){
+    return new stx.async.goal.term.Par(array,pos);
   }
   @:noUsing static public function Thunk(thunk,?pos:Pos){
     return new stx.async.goal.term.Thunk(thunk,pos);
