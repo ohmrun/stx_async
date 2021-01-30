@@ -1,9 +1,10 @@
 package stx.async.test;
 
+import stx.async.terminal.NewTerminal;
 class NewTerminalTest extends utest.Test{
   private function get_resolver<R,E>():Resolver<R,E>{ return @:privateAccess Resolver.unit(); }
 
-  public function test(){
+  public function test(async:utest.Async){
     var resolver        = get_resolver();
     var detached        = resolver.detach(
       (resolve:Resolver<Int,Dynamic>) -> {
@@ -15,6 +16,7 @@ class NewTerminalTest extends utest.Test{
         return resolve.resolve(__.success(1)).serve();
       }
     );
+    Loop.ZERO.add(Work.fromGoal(detached.toGoal()));
     // );
     // var contained       = resolver.contain(
     //   (outcome:Outcome<String,Defect<Dynamic>) -> outcome.fold(

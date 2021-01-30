@@ -1,6 +1,6 @@
 package stx.async.declared;
 
-interface Api{
+interface Api extends IFaze{
   public var pos(default,null):Pos;
   
   public function get_id():Int;

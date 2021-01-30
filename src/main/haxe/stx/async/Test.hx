@@ -21,7 +21,7 @@ class Test{
         new CrunchTest(),
         new TaskClsTest(),
         new TerminalTest(),
-        //new NewTerminalTest(),
+        new NewTerminalTest(),
         new LaterTest(),
         //new StepTest(),
         #if target.threaded
@@ -30,7 +30,7 @@ class Test{
         new GoalSeqTest(),
         new TaskSeqTest(),
       ],
-      [TerminalTest]
+      [NewTerminalTest]
     );
   }
 }

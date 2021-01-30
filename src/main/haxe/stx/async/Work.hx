@@ -32,6 +32,9 @@ typedef WorkApi = Null<TaskApi<Any,Dynamic>>;
   @:from @:noUsing static public function fromFutureWork(ft:Future<Work>):Work{
     return Task.Later(ft.map(work -> work.toTaskApi())).toWork();
   }
+  @:from @:noUsing static public function fromGoal(goal:stx.async.goal.Api):Work{
+    return new stx.async.work.term.Goal(goal);
+  }
   @:from @:noUsing static public function Stamp(outcome:Outcome<Any,Defect<Dynamic>>):Work{
     return new stx.async.work.term.Stamp(outcome);
   }

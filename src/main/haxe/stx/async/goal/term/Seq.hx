@@ -36,7 +36,7 @@ class Seq extends Delegate{
   //defect.is_defined() && 
   public function pursue(){
     ////__.log()('pursue $this');
-    __.log().debug('$sel ${get_loaded()} ${lhs.get_loaded()} ${rhs.get_loaded()}');
+    __.log().debug('$sel ${get_loaded()} ${lhs.identifier().name} ${lhs.get_loaded()} ${rhs.identifier().name} ${rhs.get_loaded()}');
     if(!get_loaded()){
       switch(this.sel){
         case false : 

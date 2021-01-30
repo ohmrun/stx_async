@@ -9,15 +9,19 @@
     "contributors": [
         "0b1kn00b"
     ],
-"releasenote": "see CHANGELOG.md",
+    "releasenote": "see CHANGELOG.md",
     "version": "1.2.0",
     "url": "https://github.com/ohmrun/stx_async",
     "dependencies": {
-        "tink_core" : "2.0.0-rc.1",
-        "stx_pico"  : "1.0.0",
-        "stx_nano"  : "0.1.5",
-        "stx_fn"    : "1.0.0",
-        "stx_log"   : "0.1.5"
+			"tink_core"     : "git:https://github.com/haxetink/tink_core.git",
+
+
+			"stx_pico"      : "git:https://github.com/ohmrun/stx_pico.git",
+			"stx_nano"      : "git:https://github.com/ohmrun/stx_nano.git",
+			"stx_fn"        : "git:https://github.com/ohmrun/stx_fn.git",
+
+
+			"stx_log"       : "git:https://github.com/ohmrun/stx_log.git"
     },
     "classPath": "src/main/haxe"
 }

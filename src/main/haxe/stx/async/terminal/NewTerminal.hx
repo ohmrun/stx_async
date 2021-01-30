@@ -14,16 +14,9 @@ abstract class TerminalTaskCls<R,E> implements stx.async.task.Api<R,E>{
   abstract public function get_result():Null<R>;
   
 
-  public function toWork(?pos:Pos):Work{
-    return this;
-  }
-  public function toTaskApi():TaskApi<R,E>{
-    return this;
-  }
-
-  public function toString():String{
-    return '';
-  }
+  public function toWork(?pos:Pos):Work{return this;}
+  public function toTaskApi():TaskApi<R,E>{return this;}
+  public function toString():String{ return '';}
 }
 abstract class Arriliko<I,O,E>{
   abstract public function defer(i:I,cont:Resolver<O,E>):Order;
@@ -60,10 +53,10 @@ class ArrilikoBoth<Ii,Iii,Oi,Oii,E> extends Arriliko<Couple<Ii,Iii>,Couple<Oi,Oi
   public function defer(i:Couple<Ii,Iii>,cont:Resolver<Couple<Oi,Oii>,E>){
     return i.decouple(
       (l,r) -> {
-        var lhs = None;
-        var rhs = None;
+        var lhs_v = None;
+        var rhs_v = None;
         var handler = () -> {
-          switch([lhs,rhs]){
+          switch([lhs_v,rhs_v]){
             case [None,_]                             :
             case [_,None]                             : 
             case [Some(Failure(l)),Some(Failure(r))]  : cont.resolve(__.failure(l.concat(r)));
@@ -72,14 +65,29 @@ class ArrilikoBoth<Ii,Iii,Oi,Oii,E> extends Arriliko<Couple<Ii,Iii>,Couple<Oi,Oi
             case [Some(Success(l)),Some(Success(r))]  : cont.resolve(__.success(__.couple(l,r))); 
           }
         }
-        var a = cont.contain(
-          oc
+        var l_handler = cont.contain(
+          x -> {
+            lhs_v = Some(x);
+            handler();
+            return Order.unit();
+          }
         );
-        //var b = cont.detach();
-
-        //var l = lhs.defer(l,a);
-        //var r = rhs.defer(r,b);
-        return Order.unit();
+        var l = lhs.defer(
+          i.fst(),
+          l_handler
+        );
+        var r_handler = cont.contain(
+          x -> {
+            rhs_v = Some(x);
+            handler();
+            return Order.unit();
+          }
+        );
+        var r = rhs.defer(
+          i.snd(),
+          r_handler
+        );     
+        return Order.lift(new stx.async.goal.term.Par([l.toGoal(),r.toGoal()]));
       }
     );
   }
@@ -88,6 +96,7 @@ abstract Order(Null<Goal>) from Null<Goal>{
   static public inline function unit():Order return null;
   static public inline function lift(self:Goal):Order return self;
   public function prj():Goal return this;
+  public function toGoal():Goal return prj();
 }
 class Resolver<R,E> extends GoalTreeDirect{
   public var resolved(default,null):Bool;
@@ -97,9 +106,9 @@ class Resolver<R,E> extends GoalTreeDirect{
 
   static public function unit<R,E>() return new Resolver();
   
-  public function new(?pos:Pos){
+  public function new(?handle:Array<Goal>,?pos:Pos){
     this.resolved = false;
-    this.handle   = [];
+    this.handle   = __.option(handle).defv([]);
     this.goals    = new stx.async.goal.term.Par(this.handle);
     super(pos);
   }
