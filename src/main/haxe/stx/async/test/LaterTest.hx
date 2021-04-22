@@ -1,6 +1,6 @@
 package stx.async.test;
 
-class LaterTest extends utest.Test{
+class LaterTest extends TestCase{
   public function test(){
     var task = Task.Later(Task.Pure(1));
         //////__.log().close()(task.loaded);

@@ -12,6 +12,9 @@ enum abstract GoalStatus(Int) from Int{
 
   
   var Secured = 4; // Value available.
+  // public function toInt(){
+  //   return this;
+  // }
 }
 class GoalStatusLift{
   static public inline function is_partial<T,E>(self:GoalStatus):Bool{

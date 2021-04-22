@@ -1,6 +1,6 @@
 package stx.async.test;
 
-class CrunchTest extends utest.Test{
+class CrunchTest extends TestCase{
   public function test(){
     var orders = [TaskPursue,TaskResult("hello")];
     var tasks  = new ChompyTask(orders);

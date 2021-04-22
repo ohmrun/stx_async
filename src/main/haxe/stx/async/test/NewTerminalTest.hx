@@ -1,10 +1,10 @@
 package stx.async.test;
 
 import stx.async.terminal.NewTerminal;
-class NewTerminalTest extends utest.Test{
+class NewTerminalTest extends TestCase{
   private function get_resolver<R,E>():Resolver<R,E>{ return @:privateAccess Resolver.unit(); }
 
-  public function test(async:utest.Async){
+  public function test(async:Async){
     var resolver        = get_resolver();
     var detached        = resolver.detach(
       (resolve:Resolver<Int,Dynamic>) -> {

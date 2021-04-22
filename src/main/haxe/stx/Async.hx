@@ -1,12 +1,4 @@
 package stx;
-class Async{
-  static public function timer(wildcard:Wildcard) return new Timer();
-  static public function bubble(self:stx.async.transmit.Api,insider:stx.async.transmit.Api){
-    insider.signal.nextTime().handle(
-      (_) -> @:privateAccess self.trigger.trigger(_)
-    );
-  }
-}
 
 typedef TaskDef<R,E>  = stx.async.task.Def<R,E>;
 typedef TaskApi<R,E>  = stx.async.task.Api<R,E>;

@@ -5,17 +5,15 @@ using stx.Nano;
 using stx.Async;
 using stx.Fn;
 
-import utest.Assert.*;
-import utest.*;
+using stx.unit.Test;
+
 import stx.async.test.*;
 import stx.async.test.type.*;
 import stx.async.test.type.TaskResultType;
 
-
-
 class Test{
   static public function main(){
-    stx.Test.test(
+    __.unit(
       [
         new SubmitTest(),
         new CrunchTest(),
@@ -34,13 +32,13 @@ class Test{
     );
   }
 }
-class TaskSeqTest extends utest.Test{
+class TaskSeqTest extends TestCase{
   @Ignored
   public function test(){
     pass();
   }
 }
-class GoalSeqTest extends utest.Test{
+class GoalSeqTest extends TestCase{
   public function test(){
     var goal_seq = Goal.Seq(
       Goal.Thunk(
@@ -59,9 +57,9 @@ class GoalSeqTest extends utest.Test{
     same(Secured,goal_seq.get_status());
   }
 }
-class StepTest extends utest.Test{
+class StepTest extends TestCase{
   @:timeout(1000000)
-  public function test(async:utest.Async){
+  public function test(async:Async){
     var step      = Loop.Step();
         step.exit = async.done.bind();
         step.add(Task.Pure(1).toWork());

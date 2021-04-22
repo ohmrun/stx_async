@@ -1,7 +1,7 @@
 package stx.async.test;
 
-class SubmitTest extends utest.Test{
-  public function test(async:utest.Async){
+class SubmitTest extends TestCase{
+  public function test(async:Async){
     var loop    = Loop.Event();
     var trigger = Future.trigger();
     var next = Task.Later(trigger.asFuture());

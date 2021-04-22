@@ -1,6 +1,6 @@
 package stx.async.test;
 
-class TaskClsTest extends utest.Test{
+class TaskClsTest extends TestCase{
   public function test_pure(){
     var self = Task.Pure(1);
     same(self.get_status(),Secured);
@@ -19,7 +19,7 @@ class TaskClsTest extends utest.Test{
     var self    = Task.Later(trigger.asFuture());
     //////__.log()(self.status.toString());
     same(self.get_status(),Pending);
-    notNull(self.signal);
+    exists(self.signal);
     self.signal.nextTime().handle(
       (_) -> {
         called = true;

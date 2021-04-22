@@ -2,7 +2,7 @@ package stx.async.test;
 
 typedef Arw<T,Ti> = T -> Terminal<Ti,Noise> -> Work;
 
-class TerminalTest extends utest.Test{
+class TerminalTest extends TestCase{
   private static function get_terminal<R,E>():Terminal<R,E>{
     return @:privateAccess new Terminal();
   }
@@ -94,7 +94,7 @@ class TerminalTest extends utest.Test{
     //     work.pursue();
     // trace("PURSUE");
     //     work.pursue();
-    equals(4,work.get_status());
+    equals(Secured,work.get_status());
   }
   public function test_terminal_cascade(){
     var v     = None;
@@ -177,7 +177,7 @@ class TerminalTest extends utest.Test{
     var methodIII = fn(__.log().through());
     var methodIV  = fn(
       __.passthrough((x) -> {
-        utest.Assert.pass();
+        pass();
       })
     );
     var arw       = then(then(methodI,methodIII),methodIV);

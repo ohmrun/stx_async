@@ -1,5 +1,7 @@
 package stx.async.transmit;
 
+import tink.core.Signal;
+
 abstract class Abs extends stx.async.declared.Abs{
   public function new(?pos:Pos){
     super(pos);

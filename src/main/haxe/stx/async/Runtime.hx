@@ -8,7 +8,7 @@ interface RuntimeApi{
   public function runWithEventLoop(job:()->Void):Void;
   public function createWithEventLoop(job:()->Void):Thread;
   public function readMessage(block:Bool):Dynamic;
-  public function initEventLoop():Void;
+  
   public function processEvents():Void;
 }
 class RuntimeCls implements RuntimeApi{
@@ -33,9 +33,6 @@ class RuntimeCls implements RuntimeApi{
   }
   public inline function readMessage(block:Bool):Dynamic{
     return sys.thread.Thread.readMessage(block);
-  }
-  public inline function initEventLoop():Void{
-    @:privateAccess sys.thread.Thread.initEventLoop();
   }
   public inline function processEvents():Void{
     @:privateAccess sys.thread.Thread.processEvents();

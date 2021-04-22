@@ -59,7 +59,7 @@ abstract class FlatMap<T,Ti,E> extends stx.async.task.Direct<Ti,E>{
             case Working  : 
             case Waiting : 
               this.set_status(Waiting);
-              this.bubble(further);
+              bubble(this,further);
             case Secured  :
               this.set_status(Secured);
           }
@@ -88,6 +88,11 @@ abstract class FlatMap<T,Ti,E> extends stx.async.task.Direct<Ti,E>{
     return this.delegate.get_loaded().if_else(
       () -> __.option(further).map(  _ -> _.get_loaded() ).defv(false),
       ()  -> false
+    );
+  }
+  static function bubble(self:stx.async.transmit.Api,insider:stx.async.transmit.Api){
+    insider.signal.nextTime().handle(
+      (_) -> @:privateAccess self.trigger.trigger(_)
     );
   }
 }
