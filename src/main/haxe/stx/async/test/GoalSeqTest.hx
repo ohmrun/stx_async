@@ -1,7 +1,7 @@
 package stx.async.test;
 
 class GoalSeqTest extends TestCase{
-  public function test(){
+  public function test_fastpath(){
     var goal_seq = Goal.Seq(
       Goal.Thunk(
         () -> Secured
@@ -10,12 +10,10 @@ class GoalSeqTest extends TestCase{
         () -> Secured
       )
     );
-    same(false,@:privateAccess goal_seq.sel);
-    goal_seq.pursue();
-    same(Secured,@:privateAccess goal_seq.lhs.get_status());
-    goal_seq.pursue();
-    same(true,@:privateAccess goal_seq.sel);
-    //__.`()(goal_seq.get_status());
-    same(Secured,goal_seq.get_status());
+    this.equals(false,@:privateAccess goal_seq.sel);
+        goal_seq.pursue();
+    this.equals(Secured,@:privateAccess goal_seq.lhs.get_status());
+        goal_seq.pursue();
+    this.equals(true,@:privateAccess goal_seq.sel);
   }
 }

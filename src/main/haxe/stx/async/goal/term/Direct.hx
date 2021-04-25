@@ -8,7 +8,7 @@ abstract class Direct implements stx.async.goal.Api extends stx.async.tick.Abs{
   abstract public function pursue():Void;
   abstract public function escape():Void;
 
-  public inline function get_loaded():Bool{
+  public function get_loaded():Bool{
     return this.get_status() == Secured;
   }
   

@@ -19,7 +19,7 @@ class Delegated extends Delegate{
   public function pursue(){
     this.delegate.pursue();
   }
-  function escape(){
+  public function escape(){
     this.delegate.escape();
   }
   public function update(){

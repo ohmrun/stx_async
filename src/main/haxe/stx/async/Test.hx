@@ -15,20 +15,20 @@ class Test{
   static public function main(){
     __.unit(
       [
-        // new SubmitTest(),
+        new GoalSeqTest(),
+        new TaskClsTest(),
+        //new SubmitTest(),
         // new CrunchTest(),
-        // new TaskClsTest(),
-        // new TerminalTest(),
+        new TerminalTest(),
         // new NewTerminalTest(),
         // new LaterTest(),
         // //new StepTest(),
         // #if target.threaded
         //   new ThreadTest(),
         // #end
-        // new GoalSeqTest(),
         // new TaskSeqTest(),
       ],
-      []
+      [TerminalTest]
     );
   }
 }

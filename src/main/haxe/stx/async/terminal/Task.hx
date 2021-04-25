@@ -35,7 +35,7 @@ class Task<T,E> extends stx.async.goal.term.Seq implements stx.async.task.Api<T,
     );
     __.log()('JOINED: $work TO $this');
   }
-  override inline public function pursue(){
+  override public function pursue(){
     //__.log()('terminal.Task.pursue() $this');
     super.pursue();
     var lhs_status = lhs.get_status();

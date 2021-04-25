@@ -22,8 +22,7 @@ class TaskClsTest extends TestCase{
     exists(self.signal);
     self.signal.nextTime().handle(
       (_) -> {
-        called = true;
-        //////__.log()(self);
+        called = true;     //////__.log()(self);
         same(Secured,self.get_status());
       }
     );

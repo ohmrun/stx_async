@@ -60,7 +60,7 @@ abstract class LoopCls implements LoopApi{
     ////__.log()('has next? ${next.is_defined()}');
       return if(next.is_defined()){
       for(work in next){
-        ////__.log()('work on: $work of ${threads.length}');
+        __.log()('work on: $work of ${threads.length}');
         try{
           work.pursue();
         }catch(e:Dynamic){

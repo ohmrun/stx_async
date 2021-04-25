@@ -3,7 +3,7 @@ package stx.async.loop.term;
 using stx.async.loop.term.Event;
 
 function log(wildcard:Wildcard){
-  return stx.async.Log.log(__).tag(__.here().toPosition().identifier());
+  return stx.async.Log.log(__).tag(__.here().toPosition().toIdentifier());
 }
 
 class Event extends LoopCls{

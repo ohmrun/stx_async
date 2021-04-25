@@ -12,9 +12,9 @@
 
 
 -cp src/main/haxe
--D analyzer-optimize
+#-D analyzer-optimize
 -D no-deprecation-warnings
--D no-inline
+#-D no-inline
 -main Main
 --interp
 #--js bin/main.js

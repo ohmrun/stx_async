@@ -25,7 +25,7 @@ class TerminalTest extends TestCase{
           receiver.pursue();
     trace(receiver);
   }
-  public function _test_terminal_task(){
+  public function test_terminal_task(){
     var term      = get_terminal();
     var task      = new stx.async.terminal.Task(
       Task.Pure(1),

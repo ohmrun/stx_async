@@ -12,8 +12,8 @@ class Main {
 	}
 	static function init_log_facade(){
 		var f = stx.log.Facade.unit();
-				//f.includes.push("stx.async");
-				//f.includes.push("stx.async.Loop");
+				f.includes.push("stx.async");
+				f.includes.push("stx.async.Loop");
 				f.includes.push("stx.async.work.Crunch");
 				f.includes.push(Terminal.identifier());
 				f.includes.push("test");
