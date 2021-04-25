@@ -1,0 +1,24 @@
+-lib hx3compat
+
+-lib tink_core
+
+-lib stx_pico
+-lib stx_nano
+
+-lib stx_fn
+-lib stx_log
+-lib stx_asys
+-lib stx_test
+
+
+-cp src/main/haxe
+-D analyzer-optimize
+-D no-deprecation-warnings
+-D no-inline
+-main Main
+--interp
+#--js bin/main.js
+#src/main/hxml/hl.hxml
+#--cpp bin/cpp
+
+-D pos
